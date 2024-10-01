@@ -1,4 +1,4 @@
 # workshop
 October 2024 abalone WGS workshop
 
-[Day one](https://link-url-here.org): setup and command line familiarity
+[Day one](https://github.com/twooldridge/workshop/blob/main/Day_1.md): setup and command line familiarity
