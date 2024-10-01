@@ -17,20 +17,19 @@ mamba install bedtools
 
 Now, create a project directory and download snpArcher into your project directory:
 ```
-mkdir -p haliotis
-cd haliotis
+mkdir -p workshop
+cd workshop
 git clone https://github.com/harvardinformatics/snpArcher.git
 ```
 
 Let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
 ```
-cd haliotis
 mkdir -p data    #Where raw data goes
 mkdir -p refs    #For reference assembly and associated files (e.g. blast database)
 mkdir -p pops    #Metadata for samples and sequencing, mainly in the form of plain .txt files
 mkdir -p cmds    #Where scripts will go
 mkdir -p logs    #Where output files will go
-mkdir -p downloads # Self explanotory
+mkdir -p downloads # Self explanatory
 ```
 We'll add more folders as we proceed with analysis. Now let's download the toy data we need for this course. I've prepared these in advance so that we can run through analyses in real time. To do this, we're only including 20 individual black abalone of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000058.1`) to reduce file size and run time. 
 
