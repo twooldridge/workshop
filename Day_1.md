@@ -4,7 +4,7 @@ bashrc stuff
 
 For this workshop we'll need to setup a designated conda environment. While one *could* use their standard conda environment for everything, I personally like to have specific environments for specific workflows to avoid compatbility issues and clashing between different projects.
 
-So, first things first, let's install mamba in our base environment because it'll make all the conda installs MUCH faster
+So, first things first, let's install the python package `mamba` in our base environment. After we do this, we can use it to make all the conda installs MUCH faster
 
 ```
 conda install -c conda-forge mamba
