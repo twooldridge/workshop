@@ -1,3 +1,9 @@
+**Random notes for things to add when relevant**
+- use of screen
+- xargs/parallel
+- sed, awk, cut, tr
+- vim/nano, less
+
 # Setup
 
 For this workshop we'll need to setup a designated conda environment. While one *could* use their standard conda environment for everything, I personally like to have specific environments for specific workflows to avoid compatbility issues and clashing between different projects.
@@ -19,14 +25,14 @@ cd workshop
 git clone https://github.com/harvardinformatics/snpArcher.git
 ```
 
-Quick test
+This test is **absolutely** necessary to run to ensure that snpArcher is set up correctly. It will probably take around ~30 min just because of the conda setup involved, not because the data is large.
 ```
 cd snpArcher
 snakemake -d .test/ci/ --cores 1 --use-conda
 ```
 
 
-Let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
+Now that *that's* done, let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
 ```
 mkdir -p data    #Where raw data goes
 mkdir -p refs    #For reference assembly and associated files (e.g. blast database)
