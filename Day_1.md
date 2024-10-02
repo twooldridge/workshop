@@ -23,6 +23,13 @@ cd workshop
 git clone https://github.com/harvardinformatics/snpArcher.git
 ```
 
+Quick test
+```
+cd snpArcher
+snakemake -d .test/ci/ --cores 1 --use-conda
+```
+
+
 Let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
 ```
 mkdir -p data    #Where raw data goes
