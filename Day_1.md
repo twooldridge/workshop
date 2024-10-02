@@ -84,7 +84,17 @@ less -S config/config.yaml
 
 <img width="1049" alt="image" src="https://github.com/user-attachments/assets/6b58680a-652b-48a6-9389-732f27ab46f2">
 
-The 'must change' variables are acutally all set to how we want them. Let's talk through the 'might change' variables a bit:
+Let's walk through what we need to change in the config file. Under 'must change'. we only need to modify:
+
+```
+final_prefix: "cracherodii"
+generate_trackhub: False
+```
+
+For the 'might change', there are a bunch of potential things:
+```
+
+```
 
 ** Discussion session **
 
