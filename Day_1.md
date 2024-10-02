@@ -69,6 +69,19 @@ We see that snpArcher needs a 'samples.csv' file with all the relevant data. We 
 
 <img width="725" alt="image" src="https://github.com/user-attachments/assets/4f8faecb-269b-451f-91ca-498764683849">
 
+So, from the `downloads` folder, copy the file `workshop_samples.csv` over to snpArcher/config/samples.csv.
+Now, let's walk through some of the parameters in the config file. You can quickly view the file first:
+```
+less -S config/config.yaml
+```
+
+<img width="1049" alt="image" src="https://github.com/user-attachments/assets/6b58680a-652b-48a6-9389-732f27ab46f2">
+
+The 'must change' variables are acutally all set to how we want them. Let's talk through the 'might change' variables a bit:
+
+** Discussion session **
+
+
 
 
 
