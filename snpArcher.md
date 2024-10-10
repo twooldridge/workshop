@@ -128,6 +128,7 @@ conda activate snparcher
 snakemake -d ./ --workflow-profile profiles/slurm  --cores 1 --use-conda   # --cores 1 because we only need 1 core for the head job
 ```
 
+Once we've ensured that everything is up and running, we can use the remaining time for any questions and then call it a day. The results will be ready by tomorrow!
 
 ** Discussion session **
 
