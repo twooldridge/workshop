@@ -106,9 +106,20 @@ First, we'll keep `jobs` at 100, since we only have 20 samples and one scaffold,
 
 We'll change `retries` to 1, `slurm_partition` to what your cluster admin would recommend, and let's just set a default `runtime` of 360 minutes (6 hours) for this test dataset. 
 
+Now, let's go through all the options for the # of threads (cpus) a process might use. I'll highlight the optiuons where increasing the number of threads might actually make a difference in runtime
+```
+genmap: 8
+bwa_map: 8
+dedup: 8
 ```
 
-```
+While some of the options could be increased from 1 to 2, for the vast majority of these you won't really see a big increase in performance. Therefore, I set these at 1, so that the slurm job requests fewer resources of the cluster and is less likely to stay `PENDING` for very long
+
+Now, below this is a LONG list of configurable parameters for each step of the pipeline. We'll leave these unmodified for now, but this will be good to revisit if you're seeing thtat some jobs need more slurm resources. Anything specified here overrides the previous parameters at the top of the config file. For example, if `bam2gvcf` keeps timing out and needs more runtime to finish, go and uncomment that section and specify a new runtime variable:
+
+<img width="747" alt="image" src="https://github.com/user-attachments/assets/e7b8ce93-29f9-4fa5-8e7b-6c70b2884ade">
+
+Now, we're ready to run everything. 
 
 
 ** Discussion session **
