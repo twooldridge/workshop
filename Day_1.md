@@ -98,6 +98,19 @@ For the 'might change', there are a bunch of potential things:
 
 ```
 
+To execute on slurm, we'll need to also make some changes in the slurm config file in `profiles/slurm/config.yaml`. Please consult with your cluster admin if you have questions about tweaking these things. You will want to scale with consideration for other users and the size of the dataset.
+
+![image](https://github.com/user-attachments/assets/5d4bd11d-6c9f-4e2f-87e1-7b1b1cdd3083)
+
+First, we'll keep `jobs` at 100, since we only have 20 samples and one scaffold, there aren't any instances where it will be useful to have more than 20 jobs running at the same time. When you start to deal with more samples and whole genome data you can increase this parameter, but *please* keep in mind how many resources you're asking of the servers and what other people need to do.
+
+We'll change `retries` to 1, `slurm_partition` to what your cluster admin would recommend, and let's just set a default `runtime` of 360 minutes (6 hours) for this test dataset. 
+
+```
+
+```
+
+
 ** Discussion session **
 
 
