@@ -119,7 +119,14 @@ Now, below this is a LONG list of configurable parameters for each step of the p
 
 <img width="747" alt="image" src="https://github.com/user-attachments/assets/e7b8ce93-29f9-4fa5-8e7b-6c70b2884ade">
 
-Now, we're ready to run everything. 
+Now, we're ready to run everything. The snakemake job that controls it all will be run in a screen session that you can check in on.
+
+```
+screen -S varcal
+cd snpArcher
+conda activate snparcher
+snakemake -d ./ --workflow-profile profiles/slurm  --cores 1 --use-conda   # --cores 1 because we only need 1 core for the head job
+```
 
 
 ** Discussion session **
