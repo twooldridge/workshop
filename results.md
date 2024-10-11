@@ -198,6 +198,6 @@ PCA =
 
 ![image](https://github.com/user-attachments/assets/f35eb52b-d392-409f-b9c1-72d30976f51b)
 
-**Exercise** how does our PCA change if we have no MAF filter?
+**Exercise**: how does our PCA change if we have no MAF filter?
 
-  
+# LD
