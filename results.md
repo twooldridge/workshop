@@ -198,6 +198,10 @@ PCA =
 
 ![image](https://github.com/user-attachments/assets/f35eb52b-d392-409f-b9c1-72d30976f51b)
 
-**Exercise**: how does our PCA change if we have no MAF filter?
+**Exercise**: How can we use the snpArcher output to generate the same plot, but with samples color-coded by sequence depth?
 
-# LD
+# LD Decay
+
+A key aspect of becoming acquainted with any new popgen system is an understanding of how linkage disequilibrium, or the correlation between SNPs, is a function of physical distance along the chromosome. By understanding this, it can inform how we 'prune' SNPs for analyses like PCA and help identify SNP-SNP correlations that are abnormal (and potentially interesting!). 
+
+To get a basic sense of this, w'll use the program PopLDDecay. 
