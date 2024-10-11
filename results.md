@@ -139,11 +139,11 @@ ggplot(secondary) +
 </details>
 
 
-
 ---
 
-# VCFs
+# Working with VCF data
 
+## Quick stats
 
 Let's quickly inspect the VCFs to see what the differences are between them. We see that the `raw` folder still retains ALL snps and indels produced by the pipeline, but you can see some of the sites have been flagged by quality filters:
 
@@ -156,3 +156,48 @@ bgzip -dc cracherodi_raw.vcf.gz | grep -v "##"  | less -S****
  And those sites have been removed in the `filtered` vcf, which is what we'll use for additional downstream analyses.
 
 <img width="1168" alt="image" src="https://github.com/user-attachments/assets/df5c72a1-da7d-439a-9eb0-37b016b3dfff">
+
+**Exercise** how do we quickly find, on the command line, the # of variants that are in a VCF?
+
+
+## PCA on a smaller sample set
+Let's say we're really interested in relationships just within our northern samples, and we want a PCA of just them. We could filter samples in the `QC/cracherodi.eigenvec` file, but the more correct approach, especially if we want to report these data, would be to re-create a PCA with just the SNPs for those samples. There are many ways to do this, but the general approach I like is:
+
+1. Filter VCF with bcftools
+2. PCA with plink
+3. Plot with R
+
+So here is the easiest way to do that. Working from our project directory
+
+```
+mkdir -p PCA
+## Select samples of interest. What is the purpose of tail -n+2?
+tail -n+2 snpArcher/config/samples.csv | awk -F"," '($10 > 36) {print $1}' > PCA/north_samples.txt
+
+## Filter VCF accordingly. 
+bcftools view -S PCA/north_samples.txt -q 0.05:minor results/cracherodii/cracherodi_clean_snps.vcf.gz |\
+bcftools +prune -n 1 -N rand -w 1kb -O z \
+> PCA/north_samples_snps.vcf.gz && tabix PCA/north_samples_snps.vcf.gz
+```
+
+Okay, let's walk through the above filtering steps, and why we do them. How many variants are we left with?<br>
+
+Now, we can use plink for the PCA:
+
+```
+plink --vcf PCA/north_samples_snps.vcf.gz --allow-extra-chr --pca --out PCA/north_samples_snps
+```
+
+And visualize in R:
+```
+PCA = 
+  fread('~/Downloads/transfer/north_samples_snps.eigenvec') %>%
+  set_colnames(c('sample','dummy',sapply(seq(1,ncol(.)-2),function(NUM){paste0("PC",NUM)})))
+
+```
+
+![image](https://github.com/user-attachments/assets/f35eb52b-d392-409f-b9c1-72d30976f51b)
+
+**Exercise** how does our PCA change if we have no MAF filter?
+
+  
