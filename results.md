@@ -15,7 +15,7 @@ Now, the results!
 
 ![image](https://github.com/user-attachments/assets/dd8f9fd5-e8b1-4384-a6ca-c4a7523b9483)
 
-Okay, this dashboard is **extremely** useful for initial exploration of the data and making sure everything looks ok. For example, no weird outliers on the PCA. The reality is that you will likely end up re-running many of these analyses yourself as you continue to explore your data and remove individuals, variants, etc. So think of this as what the name implies: a QC tool. 
+Okay, this dashboard is **extremely** useful for initial exploration of the data and making sure everything looks ok. For example, no weird outliers on the PCA. The reality is that you will likely end up re-running many of these analyses yourself as you continue to explore your data and remove individuals, variants, etc. So think of this as what the name implies: a QC tool. All the data that goes into the QC dashboard can also be found in the `QC` folder. For example, if you want a simple .txt file of sample depth, go to `QC/cracherodi.idepth`
 
 Now, we'll take a few moments to walk through this dashboard and discuss what everything means.
 
@@ -29,12 +29,118 @@ Discussion topics:
 
 # Exploring other snpArcher output
 
-Now, let's look a little deeper at what snpArcher generates that doesn't show up on the QC dashboard
+## Genmap
+
+Now, let's look a little deeper at what snpArcher generates that doesn't show up on the QC dashboard. One particularly useful piece of the pipeline is the [genmap](https://github.com/cpockrandt/genmap) output, which computes genome mappability, or the proportion of the genome to which good quality reads can map. snpArcher uses this internally for QC, but it can be very useful for you to use when interpreting and filtering the results of **other** analyses. Let's take a look in R:
+
+```
+genmap = 
+  fread('~/Downloads/transfer/sorted_mappability.bg') %>%
+  set_colnames(c('chrom','start','end','score'))
+head(genmap)
+               chrom start   end    score
+1: JAJLRC010000027.1     0 22530 1.000000
+2: JAJLRC010000027.1 22530 22583 0.500000
+3: JAJLRC010000027.1 22583 22596 0.333333
+4: JAJLRC010000027.1 22596 22607 0.250000
+5: JAJLRC010000027.1 22607 22631 0.333333
+6: JAJLRC010000027.1 22631 22637 0.500000
+```
+
+How much of the genome is perfectly mappable (score = 1)?
+
+```
+> genmap %>%
++     mutate(length = end - start - 1) %>%
++     group_by(score) %>%
++     summarize(T_length = sum(length)) %>%
++     arrange(desc(T_length)) %>%
++     mutate(pct = T_length/sum(T_length))
+# A tibble: 12 × 3
+    score T_length        pct
+    <dbl>    <dbl>      <dbl>
+ 1 1       5268252 0.906     
+ 2 0.5      473989 0.0815    
+ 3 0.333     36214 0.00623   
+ 4 0.25      17514 0.00301   
+ 5 0.2        7330 0.00126   
+ 6 0.167      4134 0.000711  
+ 7 0.1        1520 0.000261  
+ 8 0.143      1407 0.000242  
+ 9 0.125      1256 0.000216  
+10 0.0909     1056 0.000182  
+11 0.111       846 0.000146  
+12 0.0833       12 0.00000206
+```
+
+**Question**: why do I need to calculate length as `end - start - 1`? Why is the file formatted that way?<br>
+**Exercise**: Write a bed-formatted file of all regions with score == 1 that you could use for filtering other types of data
+
+## Alignment summary metrics
+The QC dashboard only reports some alignment stats. What if we wanted to know about the secondary mapping rate? These data are in the `summary_stats` folder. Once you have all the `*_AlnSumMets.txt` files in a place accessible by RStudio, try the following:
+
+```
+paths = list.files('~/Downloads/transfer/', pattern = 'AlnSum', full.names = T)
+aln_stats =
+  bind_rows(lapply(paths, 
+                   function(PATH){fread(PATH) %>% mutate(sample = basename(PATH) %>% gsub('_AlnSumMets.txt','',.))
+    })) %>%
+  set_colnames(c('value','second_value','field','sample'))
+
+head(aln_stats)
+    value second_value                                     field sample
+1: 295582            0 total (QC-passed reads + QC-failed reads)  ASI03
+2: 289146            0                                   primary  ASI03
+3:   6436            0                                 secondary  ASI03
+4:      0            0                             supplementary  ASI03
+5:   8522            0                                duplicates  ASI03
+6:   8522            0                        primary duplicates  ASI03
+```
+**Exercise** This format is kind of messy. How can we get the proportion of reads with secondary mappings?<br>
+
+One possible solution:
+<details>
+
+```
+## Formatting
+secondary =
+  aln_stats %>%
+
+  ## Get rid of distracting columns and fields
+  filter(field %in% c('total (QC-passed reads + QC-failed reads)','secondary')) %>%
+  dplyr::select(value,field,sample) %>%
+
+  ## 'Spread' and further clean the data
+  pivot_wider(values_from = value, names_from = field) %>%
+  set_colnames(c('sample','total','secondary')) %>%
+
+  ## Calculate percentage
+  mutate(pct_secondary = as.numeric(secondary)/as.numeric(total))
+
+head(secondary)
+ # A tibble: 6 × 4
+  source   total  secondary pct_secondary
+  <chr>    <chr>  <chr>             <dbl>
+1 ASI03    295582 6436             0.0218
+2 BSCO001C 357304 6026             0.0169
+3 BSCO001J 368246 8394             0.0228
+4 BSCO001O 353807 7899             0.0223
+5 CAR01    332676 5134             0.0154
+6 CAR11    105687 1513             0.0143
+
+## Plotting
+ggplot(secondary) +
+    geom_bar(aes(x = sample, y = pct_secondary), stat = 'identity') +
+    theme(axis.text.x = element_text(angle = 90))
+```
+![image](https://github.com/user-attachments/assets/ce4ff33b-2d49-4bba-914d-5674f92c023b)
+
+
+</details>
 
 
 
---- 
-
+---
 
 # VCFs
 
