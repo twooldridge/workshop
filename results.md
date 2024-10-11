@@ -17,6 +17,23 @@ Now, the results!
 
 Okay, this dashboard is **extremely** useful for initial exploration of the data and making sure everything looks ok. For example, no weird outliers on the PCA. The reality is that you will likely end up re-running many of these analyses yourself as you continue to explore your data and remove individuals, variants, etc. So think of this as what the name implies: a QC tool. 
 
+Now, we'll take a few moments to walk through this dashboard and discuss what everything means.
+
+Discussion topics:
+
+1. PC x Depth
+2. Mapping rate
+3. Relatedness
+
+---
+
+# Exploring other snpArcher output
+
+Now, let's look a little deeper at what snpArcher generates that doesn't show up on the QC dashboard
+
+
+
+--- 
 
 
 # VCFs
