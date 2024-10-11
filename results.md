@@ -1,10 +1,25 @@
-In your snpArcher results folder you should see something that looks like this:
+# QC
+
+In your snpArcher `results/cracherodii` folder you should see something that looks like this:
 
 <img width="908" alt="image" src="https://github.com/user-attachments/assets/e350f777-b5f2-4570-b883-fa531daf0700">
 
-The first thing we'll take a look at is the overall QC data located in `./results/cracherodii/cracherodi_qc.html`:
+The first thing we'll take a look at is the overall QC data located in `.QC/cracherodi_qc.html`. Let's transfer this from the cluster to our local machine, and examine in a browser. **Organizational tip** for server -> local transfers, I like to create a folder in my project directory called something like `transfer`, and put the file I want in that directory. Then, on my local machine, I can just always enter the same command:
+
+```
+scp -r ${USERNAME}@${SERVER}:${WORKDIR}/transfer ~/Downloads
+```
+Where you replace all those variables with your server-specific setup. 
+
+Now, the results!
+
+![image](https://github.com/user-attachments/assets/dd8f9fd5-e8b1-4384-a6ca-c4a7523b9483)
+
+Okay, this dashboard is **extremely** useful for initial exploration of the data and making sure everything looks ok. For example, no weird outliers on the PCA. The reality is that you will likely end up re-running many of these analyses yourself as you continue to explore your data and remove individuals, variants, etc. So think of this as what the name implies: a QC tool. 
 
 
+
+# VCFs
 
 
 Let's quickly inspect the VCFs to see what the differences are between them. We see that the `raw` folder still retains ALL snps and indels produced by the pipeline, but you can see some of the sites have been flagged by quality filters:
