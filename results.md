@@ -2,8 +2,8 @@
 
 1. [QC](#QC)<br>
 2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)<br>
-3. [Working with VCF data](#Working-with-VCF-data)
-
+3. [Working with VCF data](#Working-with-VCF-data)<br>
+  3.1 [Quick stats](#Quick-stats)
 
 # QC
 
