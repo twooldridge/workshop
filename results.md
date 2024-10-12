@@ -2,8 +2,14 @@
 
 1. [QC](#QC)<br>
 2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)<br>
+  2.1 [Genmap genome mask](#Genmap)<br>
+  2.2 [Other alighment metrics](#Alignment-summary-metrics)<br>
+  2.3 [Visualizing heterozygosity on a sample map](#Heterozygosity-on-a-map)<br>
 3. [Working with VCF data](#Working-with-VCF-data)<br>
-  3.1 [Quick stats](#Quick-stats)
+  3.1 [Quick vcf stats](#Quick-stats)<br>
+  3.2 [Re-running PCA with subset of samples](#PCA-on-a-smaller-sample-set)<br>
+  3.3 [LD decay](#LD-decay)<br>
+
 
 # QC
 
@@ -161,6 +167,10 @@ ggplot(secondary) +
 </details>
 
 
+## Heterozygosity on a map
+
+
+
 ---
 
 # Working with VCF data
@@ -267,5 +277,5 @@ ggplot(ld) +
 
 **Exercise**: r^2 = 0.2 is often a threshold used for considering snps unlinked. We can see that LD decays below that quickly. If we want to be extra conservative, at what physical distance (bp) does r^2 drop below 0.10?
 
-# Heterozygosity on a map
+
 
