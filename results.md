@@ -225,4 +225,40 @@ PCA =
 
 A key aspect of becoming acquainted with any new popgen system is an understanding of how linkage disequilibrium, or the correlation between SNPs, is a function of physical distance along the chromosome. By understanding this, it can inform how we 'prune' SNPs for analyses like PCA and help identify SNP-SNP correlations that are abnormal (and potentially interesting!). 
 
-To get a basic sense of this, w'll use the program `PopLDDecay`. 
+To get a basic sense of this, we'll use the program `PopLDDecay`. Implementation is very simple:
+
+```
+mkdir -p LD
+PopLDdecay -InVCF snpArcher/results/cracherodii/cracherodi_clean_snps.vcf.gz -OutStat LD/decay -MaxDist 100 -OutType 1
+```
+
+Hmm, seems like this might take a minute or two to run. Alternatively, we can submit this as a `slurm` job, and we'll check on the results later:
+
+
+```
+CMD="PopLDdecay -InVCF snpArcher/results/cracherodii/cracherodi_clean_snps.vcf.gz -OutStat LD/decay -MaxDist 100 -OutType 1"
+sbatch \
+--mem=5000 \
+--time=00:20:00 \
+-p long \
+-N 1 -n 1 -c 1 \
+-J decay \
+-e logs/decay.e \
+-o logs/decay.o \
+--wrap="$CMD"
+```
+
+Once completed, let's take a look at the results file `LD/decay.stat.gz` in R:
+
+```
+ld = fread('~/Downloads/transfer/decay.stat.gz')
+ggplot(ld) +
+    geom_point(aes(x = `#Dist`, y = `Mean_r^2`))
+```
+
+![image](https://github.com/user-attachments/assets/ff8a73de-ad98-4177-b0d3-48e219a9670f)
+
+**Exercise**: r^2 = 0.2 is often a threshold used for considering snps unlinked. We can see that LD decays below that quickly. If we want to be extra conservative, at what physical distance (bp) does r^2 drop below 0.10?
+
+# Heterozygosity on a map
+
