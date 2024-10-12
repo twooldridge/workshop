@@ -1,4 +1,10 @@
-# QC
+# Table of Contents
+
+1. [QC](#QC)<br>
+2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)
+
+
+## QC
 
 In your `snpArcher` `results/cracherodii` folder you should see something that looks like this:
 
@@ -32,9 +38,9 @@ Discussion topics:
 
 ---
 
-# Exploring other `snpArcher` output
+## Exploring other snpArcher output
 
-## Genmap
+### Genmap
 
 Now, let's look a little deeper at what `snpArcher` generates that doesn't show up on the QC dashboard. One particularly useful piece of the pipeline is the [genmap](https://github.com/cpockrandt/genmap) output, which computes genome mappability, or the proportion of the genome to which good quality reads can map. `snpArcher` uses this internally for QC, but it can be very useful for you to use when interpreting and filtering the results of **other** analyses. Let's take a look in `R`:
 
