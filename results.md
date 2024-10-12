@@ -1,6 +1,6 @@
 # Table of Contents
 
-1. [QC](#QC)<br><br>
+1. [snpArcher QC dashboard](#QC)<br><br>
 2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)<br>
   2.1 [Genmap genome mask](#Genmap)<br>
   2.2 [Other alighment metrics](#Alignment-summary-metrics)<br>
