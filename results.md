@@ -1,16 +1,16 @@
 # Table of Contents
 
-1. [QC](#QC)<br>
+1. [QC](#QC)<br><br>
 2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)<br>
   2.1 [Genmap genome mask](#Genmap)<br>
   2.2 [Other alighment metrics](#Alignment-summary-metrics)<br>
-  2.3 [Visualizing heterozygosity on a sample map](#Heterozygosity-on-a-map)<br>
+  2.3 [Visualizing heterozygosity on a sample map](#Heterozygosity-on-a-map)<br><br>
 3. [Working with VCF data](#Working-with-VCF-data)<br>
   3.1 [Quick vcf stats](#Quick-stats)<br>
   3.2 [Re-running PCA with subset of samples](#PCA-on-a-smaller-sample-set)<br>
   3.3 [LD decay](#LD-decay)<br>
 
-
+---
 # QC
 
 In your `snpArcher` `results/cracherodii` folder you should see something that looks like this:
