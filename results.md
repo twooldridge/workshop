@@ -1,21 +1,26 @@
 # QC
 
-In your snpArcher `results/cracherodii` folder you should see something that looks like this:
+In your `snpArcher` `results/cracherodii` folder you should see something that looks like this:
 
 <img width="908" alt="image" src="https://github.com/user-attachments/assets/e350f777-b5f2-4570-b883-fa531daf0700">
 
-The first thing we'll take a look at is the overall QC data located in `.QC/cracherodi_qc.html`. Let's transfer this from the cluster to our local machine, and examine in a browser. **Organizational tip** for server -> local transfers, I like to create a folder in my project directory called something like `transfer`, and put the file I want in that directory. Then, on my local machine, I can just always enter the same command:
+The first thing we'll take a look at is the overall QC data located in `QC/cracherodi_qc.html`. Let's transfer this from the cluster to our local machine, and examine in a browser. 
+
+> [!TIP]
+> **Organizational tip** for server -> local transfers.
+>  I like to create a folder in my project directory called something like `transfer`, and put the file I want in that directory. Then, on my local machine, I can just always enter the same command:
 
 ```
 scp -r ${USERNAME}@${SERVER}:${WORKDIR}/transfer ~/Downloads
 ```
+
 Where you replace all those variables with your server-specific setup. 
 
 Now, the results!
 
 ![image](https://github.com/user-attachments/assets/dd8f9fd5-e8b1-4384-a6ca-c4a7523b9483)
 
-Okay, this dashboard is **extremely** useful for initial exploration of the data and making sure everything looks ok. For example, no weird outliers on the PCA. The reality is that you will likely end up re-running many of these analyses yourself as you continue to explore your data and remove individuals, variants, etc. So think of this as what the name implies: a QC tool. All the data that goes into the QC dashboard can also be found in the `QC` folder. For example, if you want a simple .txt file of sample depth, go to `QC/cracherodi.idepth`
+Okay, this dashboard is **extremely** useful for initial exploration of the data and making sure everything looks ok. For example, no weird outliers on the PCA. The reality is that you will likely end up re-running many of these analyses yourself as you continue to explore your data and remove individuals, variants, etc. So think of this as what the name implies: a QC tool. All the data that goes into the QC dashboard can also be found in the `QC` folder. For example, if you want a simple `.txt` file of sample depth, go to `QC/cracherodi.idepth`
 
 Now, we'll take a few moments to walk through this dashboard and discuss what everything means.
 
@@ -27,11 +32,11 @@ Discussion topics:
 
 ---
 
-# Exploring other snpArcher output
+# Exploring other `snpArcher` output
 
 ## Genmap
 
-Now, let's look a little deeper at what snpArcher generates that doesn't show up on the QC dashboard. One particularly useful piece of the pipeline is the [genmap](https://github.com/cpockrandt/genmap) output, which computes genome mappability, or the proportion of the genome to which good quality reads can map. snpArcher uses this internally for QC, but it can be very useful for you to use when interpreting and filtering the results of **other** analyses. Let's take a look in R:
+Now, let's look a little deeper at what `snpArcher` generates that doesn't show up on the QC dashboard. One particularly useful piece of the pipeline is the [genmap](https://github.com/cpockrandt/genmap) output, which computes genome mappability, or the proportion of the genome to which good quality reads can map. `snpArcher` uses this internally for QC, but it can be very useful for you to use when interpreting and filtering the results of **other** analyses. Let's take a look in `R`:
 
 ```
 genmap = 
@@ -73,10 +78,17 @@ How much of the genome is perfectly mappable (score = 1)?
 12 0.0833       12 0.00000206
 ```
 
-**Question**: why do I need to calculate length as `end - start - 1`? Why is the file formatted that way?<br>
-**Exercise**: Write a bed-formatted file of all regions with score == 1 that you could use for filtering other types of data
+
+> **Question**:
+> Why do I need to calculate length as `end - start - 1`? Why is the file formatted that way?
+
+
+> **Exercise**:
+> 
+> Write a bed-formatted file of all regions with score == 1 that you could use for filtering other types of data
 
 ## Alignment summary metrics
+
 The QC dashboard only reports some alignment stats. What if we wanted to know about the secondary mapping rate? These data are in the `summary_stats` folder. Once you have all the `*_AlnSumMets.txt` files in a place accessible by RStudio, try the following:
 
 ```
@@ -96,7 +108,10 @@ head(aln_stats)
 5:   8522            0                                duplicates  ASI03
 6:   8522            0                        primary duplicates  ASI03
 ```
-**Exercise** This format is kind of messy. How can we get the proportion of reads with secondary mappings?<br>
+
+> **Exercise**:
+>
+>  This format is kind of messy. How can we get the proportion of reads with secondary mappings?<br>
 
 One possible solution:
 <details>
@@ -157,15 +172,17 @@ bgzip -dc cracherodi_raw.vcf.gz | grep -v "##"  | less -S****
 
 <img width="1168" alt="image" src="https://github.com/user-attachments/assets/df5c72a1-da7d-439a-9eb0-37b016b3dfff">
 
-**Exercise** how do we quickly find, on the command line, the # of variants that are in a VCF?
+> **Exercise**:
+> 
+> How do we quickly find, on the command line, the # of variants that are in a VCF?
 
 
 ## PCA on a smaller sample set
 Let's say we're really interested in relationships just within our northern samples, and we want a PCA of just them. We could filter samples in the `QC/cracherodi.eigenvec` file, but the more correct approach, especially if we want to report these data, would be to re-create a PCA with just the SNPs for those samples. There are many ways to do this, but the general approach I like is:
 
-1. Filter VCF with bcftools
-2. PCA with plink
-3. Plot with R
+1. Filter `VCF` files with `bcftools`
+2. PCA with `plink`
+3. Plot with `R`
 
 So here is the easiest way to do that. Working from our project directory
 
@@ -180,15 +197,17 @@ bcftools +prune -n 1 -N rand -w 1kb -O z \
 > PCA/north_samples_snps.vcf.gz && tabix PCA/north_samples_snps.vcf.gz
 ```
 
-Okay, let's walk through the above filtering steps, and why we do them. How many variants are we left with?<br>
+Okay, let's walk through the above filtering steps, and why we do them. How many variants are we left with?
 
-Now, we can use plink for the PCA:
+
+Now, we can use `plink` for the PCA:
 
 ```
 plink --vcf PCA/north_samples_snps.vcf.gz --allow-extra-chr --pca --out PCA/north_samples_snps
 ```
 
-And visualize in R:
+And visualize in `R`:
+
 ```
 PCA = 
   fread('~/Downloads/transfer/north_samples_snps.eigenvec') %>%
@@ -198,10 +217,12 @@ PCA =
 
 ![image](https://github.com/user-attachments/assets/f35eb52b-d392-409f-b9c1-72d30976f51b)
 
-**Exercise**: How can we use the snpArcher output to generate the same plot, but with samples color-coded by sequence depth?
+> **Exercise**:
+> 
+> How can we use the snpArcher output to generate the same plot, but with samples color-coded by sequence depth?
 
 # LD Decay
 
 A key aspect of becoming acquainted with any new popgen system is an understanding of how linkage disequilibrium, or the correlation between SNPs, is a function of physical distance along the chromosome. By understanding this, it can inform how we 'prune' SNPs for analyses like PCA and help identify SNP-SNP correlations that are abnormal (and potentially interesting!). 
 
-To get a basic sense of this, w'll use the program PopLDDecay. 
+To get a basic sense of this, w'll use the program `PopLDDecay`. 
