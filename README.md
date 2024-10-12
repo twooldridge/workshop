@@ -2,8 +2,8 @@
 October 2024 abalone WGS workshop
 
 ## Modules
-[Command line familiarity, R setup, tips, and tricks](https://github.com/twooldridge/workshop/blob/main/terminal.md): <br>
-[snpArcher setup and execution](https://github.com/twooldridge/workshop/blob/main/snpArcher.md): Configuring snpArcher and running on whole genome data <br>
-[Evaluating snpArcher results](https://github.com/twooldridge/workshop/blob/main/results.md): Basic walkthrough of initial snpArcher output, as well as some good follow-up analyses in R/python/bash <br>
-[ANGSD and genotype likelihoods](https://github.com/twooldridge/workshop/blob/main/angsd.md): <br>
-[Advanced tasks](): github, jupyter notebook workflow, etc.
+- [Command line familiarity, R setup, tips, and tricks](https://github.com/twooldridge/workshop/blob/main/terminal.md): 
+- [snpArcher setup and execution](https://github.com/twooldridge/workshop/blob/main/snpArcher.md): Configuring snpArcher and running on whole genome data
+- [Evaluating snpArcher results](https://github.com/twooldridge/workshop/blob/main/results.md): Basic walkthrough of initial snpArcher output, as well as some good follow-up analyses in `R`/`python`/`bash`
+- [ANGSD and genotype likelihoods](https://github.com/twooldridge/workshop/blob/main/angsd.md): 
+- [Advanced tasks](): GitHub, jupyter notebook workflow, etc.
