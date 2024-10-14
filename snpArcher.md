@@ -39,10 +39,10 @@ samtools faidx JAJLRC010000027.1.fa
 cd -
 rm -rf ncbi_dataset README.md md5sum.txt
 
-# Now, the fastq data. We'll try something a bit fancier to organize the read data
+## Now, the fastq data. We'll try something a bit fancier to organize the read files
+
 tar -xvf downloads/fastq.tar.gz
-ls downloads/fastq | xargs -I {} cp downloads/fastq/{} data/
-rm -rf downloads
+ls downloads/fastq | xargs -I {} mv downloads/fastq/{} data/
 ```
 
 There! Everything should be nice and organized now.
@@ -113,7 +113,7 @@ snakemake -d ./ --workflow-profile profiles/slurm  --cores 1 --use-conda   # --c
 
 Once we've ensured that everything is up and running, we can use the remaining time for any questions and then call it a day. The results will be ready by tomorrow!
 
-** Discussion session **
+# Discussion
 
 
 
