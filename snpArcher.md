@@ -82,10 +82,46 @@ final_prefix: "cracherodii"
 generate_trackhub: False
 ```
 
-For the 'might change', there are a bunch of potential things. Let's discuss:
+For the 'might change', there are a few interesting parameters. Let's discuss:
 ```
-maf: 0.01
-scaffolds_to_exclude: "mtDNA,Y"
+## I personally like to set MAF to '0' and do all filtering downtream, the analysis.
+## For example, in a selection scan, you might want to include even the lowest frequency
+## variants as long as they pass the other filtering criteria.
+maf: 0.00
+
+## This doesn't apply to our toy dataset, but for whole genome data you might want to exclude
+## the abalone mitogenome, or perhaps other scaffolds with known problems.
+## Here, we'll just set this to "", indicating that everything should be included.
+scaffolds_to_exclude: ""
+```
+
+A key feature is filtering based on coverage. There are many ways to configure this, and it depends on the type of data you have and how strict you
+would like to be. I like to set my criteria based on standard deviation:
+
+```
+## If cov_filter is True, use these parameters to control how coverage filtering is done
+## Three options are provided for coverage-based filtering. The default option is to just filter
+## regions of the genome with mean coverage below a minimal threshold (default = 1), with a very large upper limit
+## To use this option, set the variables below to the lower absolute mean coverage limit and upper absolute mean coverage limit, 
+## and make sure all other coverage variables are empty
+
+cov_threshold_lower: 
+cov_threshold_upper: 
+
+## Alternatively, filtering can be done based on standard deviations 
+## (assumes a Poisson distribution, so stdev_cov equals the square root of the mean coverage),
+## where regions of the genome with mean coverage < X standard deviations or > X standard deviations are removed.
+## To use this option, set the variables below to the desired X
+## and make sure all other coverage variables are empty
+
+cov_threshold_stdev: 2.5
+
+## Finally, filtering can be done based on absolute scaling of the mean, 
+## where regions of the genome with mean coverage < (global mean coverge / X) or > (global mean coverge * X) are removed.
+## To use this option, set the variable below to the desired X
+## and make sure all other coverage variables are empty
+
+cov_threshold_rel:
 ```
 
 # Running snpArcher
