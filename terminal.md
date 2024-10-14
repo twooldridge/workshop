@@ -57,6 +57,9 @@ make ; make clean
 cd ../;ln -s ${PWD}/bin/PopLDDecay ~/bin/
 ```
 
+At times we'll want to use [PLINK](https://www.cog-genomics.org/plink/). Once you download the appropriate binary, just place it in your `~/bin/` folder and make sure it runs. No installation required!
+
+
 We'll also be using [ANGSD](https://www.popgen.dk/angsd/index.php/Main_Page) for some analyses of genotype likelihoods. To install:
 ```
 #download htslib
