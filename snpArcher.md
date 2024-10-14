@@ -84,8 +84,11 @@ generate_trackhub: False
 
 For the 'might change', there are a bunch of potential things. Let's discuss:
 ```
-
+maf: 0.01
+scaffolds_to_exclude: "mtDNA,Y"
 ```
+
+# Running snpArcher
 
 To execute on slurm, we'll need to also make some changes in the slurm config file in `profiles/slurm/config.yaml`. 
 
