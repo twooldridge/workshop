@@ -1,39 +1,6 @@
-**Random notes for things to add when relevant**
-- use of screen
-- xargs/parallel
-- sed, awk, cut, tr
-- vim/nano, less
+# Configuring snpArcher
 
-# Setup
-
-For this workshop we'll need to setup a designated conda environment. While one *could* use their standard conda environment for everything, I personally like to have specific environments for specific workflows to avoid compatbility issues and clashing between different projects.
-
-
-First, we create an environment for this workshop where we'll setup all the software we need, including [SNPArcher](https://snparcher.readthedocs.io/en/latest/) and its requirements
-```
-conda create -c conda-forge -c bioconda -n snparcher "snakemake>=8" "python==3.11.4"
-conda activate snparcher
-conda install -c conda-forge mamba<2.0.0 #Incompatibilities arise between snakemake and newer mamba
-# Now we install some more handy tools
-mamba install bedtools samtools ncbi-datasets-cli
-```
-
-Now, create a project directory and download snpArcher into your project directory:
-```
-mkdir -p workshop
-cd workshop
-git clone https://github.com/harvardinformatics/snpArcher.git
-```
-
-This test is **absolutely** necessary to run to ensure that `snpArcher` is set up correctly. It will probably take around ~30 min just because of the conda setup involved, not because the data is large.
-
-```
-cd snpArcher
-snakemake -d .test/ci/ --cores 1 --use-conda
-```
-
-
-Now that *that's* done, let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
+Ok, the following assumes that you have already setup a snpArcher conda environment and have successfully executed the examlpe datasets (see [setup](https://github.com/twooldridge/workshop/blob/main/terminal.md) let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
 
 ```
 mkdir -p data      # Where raw data goes
@@ -44,13 +11,13 @@ mkdir -p logs      # Where output files will go
 mkdir -p downloads # Self explanatory
 ```
 
-We'll add more folders as we proceed with analysis. Now let's download the toy data we need for this course. I've prepared these in advance so that we can run through analyses in real time. To do this, we're only including 20 individual black abalone of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000058.1`) to reduce file size and run time. 
+We'll add more folders as we proceed with analysis. Now let's download the toy data we need for this course. I've prepared these in advance so that we can run through analyses in real time. To do this, we're only including 20 individual black abalone of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000027.1`) to reduce file size and run time. 
 
 > [!TIP]
 > In general, whenever you're testing something new, start small! I like to pick a favorite scaffold or region for a reference genome I work with before I do something on the whole genome. This will make it easier to troubleshoot and save you time before scaling up!
 
 ```
-# Download fastq data we'll be using. This isn't the 'rawest' data format
+# Download fastq data we'll be using. This isn't the 'rawest' data format, they are example reads I've subsampled from the data in the 2024 paper.
 {from google drive}
 # Download black abalone reference genome straight from NCBI. This should complete in less than a minute
 datasets download genome accession GCA_022045235.1 --include genome --filename downloads/cracherodii.zip;unzip -o downloads/cracherodii.zip
@@ -59,16 +26,23 @@ datasets download genome accession GCA_022045235.1 --include genome --filename d
 Some organization:
 
 ```
-# First, the reference assembly
+## First, the reference assembly
+
 cd refs
 cp ../ncbi_dataset/data/GCA_022045235.1/GCA_022045235.1_xgHalCrac1.p_genomic.fna cracherodii.fa
 samtools faidx cracherodii.fa
+
+## Now create a reference genome consisting of just the scaffold we'll be working with in the workshop.
+
+samtools faidx cracherodii.fa JAJLRC010000027.1 > JAJLRC010000027.1.fa
+samtools faidx JAJLRC010000027.1.fa
 cd -
 rm -rf ncbi_dataset README.md md5sum.txt
 
-# Now, the fastq data. We'll try something a bit fancier
+# Now, the fastq data. We'll try something a bit fancier to organize the read data
 tar -xvf downloads/fastq.tar.gz
-ls downloads/fastq | xargs -I {} cp downloads/fastq/{} data/ 
+ls downloads/fastq | xargs -I {} cp downloads/fastq/{} data/
+rm -rf downloads
 ```
 
 There! Everything should be nice and organized now.
