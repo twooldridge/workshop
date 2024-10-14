@@ -4,7 +4,7 @@
 
 ## Text editor
 
-While you can make a lot of quick edits on the command line with `vim`/`nano` etc., it's nice to have an easy text editor on your local machine to play around with. If you're on Mac TextEdit should already be available, but I'm a big fan of [Sublime](https://www.sublimetext.com/),
+While you can make a lot of quick edits on the command line with `vim`/`nano` etc., it's nice to have an easy text editor on your local machine to play around with. If you're on Mac TextEdit should already be available, but I'm a big fan of [Sublime](https://www.sublimetext.com/).
 
 ## Command line
 
@@ -14,7 +14,7 @@ Let's make some little edits to `~/.bashrc`:
 ```
 
 ## snpArcher
-For this workshop we'll need to setup a designated conda environment. While one *could* use their standard conda environment for everything, I personally like to have specific environments for specific workflows to avoid compatbility issues and clashing between different projects.
+For this workshop we'll need to setup a designated conda environment. While one *could* use their standard conda environment for everything, I personally like to have specific environments for specific workflows to avoid compatbility issues and clashing between different projects. The following instructions assume that you already have `miniconda` (preferred IMO) or `Anaconda` installed on your cluster.
 
 
 First, we create an environment for this workshop where we'll setup all the software we need, including [SNPArcher](https://snparcher.readthedocs.io/en/latest/) and its requirements
