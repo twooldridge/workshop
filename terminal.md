@@ -41,13 +41,13 @@ snakemake -d .test/ci/ --cores 1 --use-conda
 
 ## Misc. software 
 
-Where possible, let's use conda to install some other useful utilities:
+1) Where possible, let's use `conda` to install some other useful utilities:
 
 ```
 mamba install bedtools samtools bcftools ncbi-datasets-cli
 ```
 
-For some later analyses, we'll want to use PopLDDecay. Download the latest tarball from [here](https://github.com/BGI-shenzhen/PopLDdecay?tab=readme-ov-file) and transfer it to your Downloads or Software directory on the server. Then:
+2) For some later analyses, we'll want to use PopLDDecay. Download the latest tarball from [here](https://github.com/BGI-shenzhen/PopLDdecay?tab=readme-ov-file) and transfer it to your Downloads or Software directory on the server. Then:
 
 ```
 tar -zxvf  PopLDdecayXXX.tar.gz
@@ -57,10 +57,10 @@ make ; make clean
 cd ../;ln -s ${PWD}/bin/PopLDDecay ~/bin/
 ```
 
-At times we'll want to use [PLINK](https://www.cog-genomics.org/plink/). Once you download the appropriate binary, just place it in your `~/bin/` folder and make sure it runs. No installation required!
+3) At times we'll want to use [PLINK](https://www.cog-genomics.org/plink/). Once you download the appropriate binary, just place it in your `~/bin/` folder and make sure it runs. No installation required!
 
 
-We'll also be using [ANGSD](https://www.popgen.dk/angsd/index.php/Main_Page) for some analyses of genotype likelihoods. To install:
+4) We'll also be using [ANGSD](https://www.popgen.dk/angsd/index.php/Main_Page) for some analyses of genotype likelihoods. To install:
 ```
 #download htslib
 git clone --recurse-submodules https://github.com/samtools/htslib.git;
