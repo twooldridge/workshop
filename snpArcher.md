@@ -17,9 +17,10 @@ We'll add more folders as we proceed with analysis. Now let's download the toy d
 > In general, whenever you're testing something new, start small! I like to pick a favorite scaffold or region for a reference genome I work with before I do something on the whole genome. This will make it easier to troubleshoot and save you time before scaling up!
 
 ```
-# Download fastq data we'll be using. This isn't the 'rawest' data format, they are example reads I've subsampled from the data in the 2024 paper.
+## Download fastq data we'll be using. This isn't the 'rawest' data format, they are example reads I've subsampled from the data in the 2024 paper.
 {from google drive}
-# Download black abalone reference genome straight from NCBI. This should complete in less than a minute
+
+## Download black abalone reference genome straight from NCBI. This should complete in less than a minute
 datasets download genome accession GCA_022045235.1 --include genome --filename downloads/cracherodii.zip;unzip -o downloads/cracherodii.zip
 ```
 
@@ -32,7 +33,7 @@ cd refs
 cp ../ncbi_dataset/data/GCA_022045235.1/GCA_022045235.1_xgHalCrac1.p_genomic.fna cracherodii.fa
 samtools faidx cracherodii.fa
 
-## Now create a reference genome consisting of just the scaffold we'll be working with in the workshop.
+## Now create a reference genome consisting of just the scaffold we'll be working with for this workshop.
 
 samtools faidx cracherodii.fa JAJLRC010000027.1 > JAJLRC010000027.1.fa
 samtools faidx JAJLRC010000027.1.fa
@@ -45,7 +46,7 @@ tar -xvf downloads/fastq.tar.gz
 ls downloads/fastq | xargs -I {} mv downloads/fastq/{} data/
 ```
 
-There! Everything should be nice and organized now.
+There! Everything should be nice and organized now. Let's take a look at the snpArcher configuration:
 
 ```
 cd snpArcher
@@ -57,7 +58,7 @@ We see that snpArcher needs a `samples.csv` file with all the relevant data. We 
 <img width="725" alt="image" src="https://github.com/user-attachments/assets/4f8faecb-269b-451f-91ca-498764683849">
 
 So, from the `downloads` folder, copy the file `workshop_samples.csv` over to `snpArcher/config/samples.csv`.
-Now, let's walk through some of the parameters in the config file. You can quickly view the file first:
+Now, let's look more deeply at the parameters in the config file. You can quickly view the file first:
 
 ```
 less -S config/config.yaml
@@ -72,7 +73,7 @@ final_prefix: "cracherodii"
 generate_trackhub: False
 ```
 
-For the 'might change', there are a bunch of potential things:
+For the 'might change', there are a bunch of potential things. Let's discuss:
 ```
 
 ```
