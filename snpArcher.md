@@ -40,10 +40,20 @@ samtools faidx JAJLRC010000027.1.fa
 cd -
 rm -rf ncbi_dataset README.md md5sum.txt
 
+
+
+
 ## Now, the fastq data. We'll try something a bit fancier to organize the read files
 
 tar -xvf downloads/fastq.tar.gz
-ls downloads/fastq | xargs -I {} mv downloads/fastq/{} data/
+ls downloads/fastq | xargs -I {} cp downloads/fastq/{} data/
+
+
+
+
+## Finally, the sample file:
+cp downloads/samples.csv pops/
+cp downloads/samples.csv snpArcher/config/samples.csv
 ```
 
 There! Everything should be nice and organized now. Let's take a look at the snpArcher configuration:
@@ -53,11 +63,10 @@ cd snpArcher
 head config/config.yaml
 ```
 
-We see that snpArcher needs a `samples.csv` file with all the relevant data. We can create this in excel and export it, or use the one I made for this class:
+We see that snpArcher needs a `samples.csv` file with all the relevant data (below). We can create this in excel and export it, or use the one I made for this class which we just placed in `snpArcher/config`:
 
 <img width="725" alt="image" src="https://github.com/user-attachments/assets/4f8faecb-269b-451f-91ca-498764683849">
 
-So, from the `downloads` folder, copy the file `workshop_samples.csv` over to `snpArcher/config/samples.csv`.
 Now, let's look more deeply at the parameters in the config file. You can quickly view the file first:
 
 ```
