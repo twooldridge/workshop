@@ -2,8 +2,14 @@
 
 <img src="https://github.com/user-attachments/assets/eb4b6eeb-1e28-4c67-90b8-2d543725006d" alt="drawing" width="400"/>
 
+## Agenda
+Over the course of the workshop the primary aim is to become acquainted with `snpArcher` in order to call variants on your new data. In addition to that, we will cover some terminal/server basics, steps to make your workflow easier, and some downstream analyses, including those relying on **genotype likelihoods** instead of variant calls.
 
-## Modules
+This workshop is intended to be flexible, so topics can be added or dropped as needed depending on interest and skill level. Just communicate with me and we'll make adjustments!
+
+Last thing - if you have suggestions for what to add to these workshop pages for your future self or other researchers, please let me know. I want to make this as useful as possible.
+
+## Main modules
 - [Setup](https://github.com/twooldridge/workshop/blob/main/terminal.md)
 - [Command line familiarity, working on servers](https://github.com/twooldridge/workshop/blob/main/misc.md): 
 - [snpArcher setup and execution](https://github.com/twooldridge/workshop/blob/main/snpArcher.md): Configuring snpArcher and running on whole genome data
