@@ -228,8 +228,9 @@ ggplot(secondary) +
 
 </details>
 
+## SNP QC metrics
 
-## Heterozygosity on a map
+MAF exercise
 
 
 
