@@ -51,7 +51,7 @@ ggplot(pca_results, aes(x = `1`,y = `2`)) +
 ```
 ![image](https://github.com/user-attachments/assets/9df6fde7-3869-4f22-b760-23d37512ee0a)
 
-
+---
 
 # Diversity and selection stats
 
