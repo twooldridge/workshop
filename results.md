@@ -2,7 +2,7 @@
 
 1. [snpArcher QC dashboard](#QC)<br><br>
 2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)<br>
-  2.1 [Genmap genome mask](#Genmap)<br>
+  2.1 [Genome masks and callable sites](#Callable-sites)<br>
   2.2 [Other alignment metrics](#Alignment-summary-metrics)<br>
   2.3 [Visualizing heterozygosity on a sample map](#Heterozygosity-on-a-map)<br><br>
 3. [Working with VCF data](#Working-with-VCF-data)<br>
@@ -50,12 +50,73 @@ Discussion topics:
 
 ## Callable sites
 
-## Coverage
+A key QC aspect of snpArcher is that it determines what regions of the genome are 'callable' based on 1) sequencing coverage, and 2) mappability to the reference genome. Will discuss each of these in turn.
+
+### Coverage
+
+In the `callable_sites` directory there are a whole bunch of files. Essentially, what snpArcher is doing behind the scenes is determining coverage metrics for each sample (`*mosdepth*txt`), and using these parameters to determine which regions of the genome have too few or too many reads. Such regions will be used to filter out snps and excluded for some of the calculations (e.g. heterozygosity). Remember, this is a parameter we set in `config.yaml`. Let's take a look at `callable_sites/cracherodi_callable_sites_cov.bed`:
+
+```
+JAJLRC010000027.1	7	2691
+JAJLRC010000027.1	2723	2980
+JAJLRC010000027.1	3048	3074
+JAJLRC010000027.1	3120	3358
+JAJLRC010000027.1	3434	3494
+JAJLRC010000027.1	3496	3529
+JAJLRC010000027.1	3530	5242
+JAJLRC010000027.1	5272	5292
+JAJLRC010000027.1	5309	5310
+JAJLRC010000027.1	5311	5392
+```
+
+These are all the 'good' based on sequence coverage. Regions that are separated by less than 100bp are **merged**. This is also a parameter we had set in the `config.yaml` file! To see this in action, compare the first few lines of to what we see in the main results directory under `cracherodi_callable_sites.bed`:
+
+```
+JAJLRC010000027.1	7	5392
+JAJLRC010000027.1	5636	5796
+JAJLRC010000027.1	5949	16442
+```
+
+And there you have it! That's how the coverage-based mask works. 
 
 
 ### Genmap
 
-Now, let's look a little deeper at what `snpArcher` generates that doesn't show up on the QC dashboard. One particularly useful piece of the pipeline is the [genmap](https://github.com/cpockrandt/genmap) output, which computes genome mappability, or the proportion of the genome to which good quality reads can map. `snpArcher` uses this internally for QC, but it can be very useful for you to use when interpreting and filtering the results of **other** analyses. Let's take a look in `R`:
+Now, the second piece of the puzzle - the mappability mask created by [genmap](https://github.com/cpockrandt/genmap). This program determines  which regions of the genome to which good quality reads can map. As we now know, `snpArcher` uses this internally for QC, but it can be very useful for you to use when interpreting and filtering the results of **other** analyses. 
+
+Let's look at the first few lines of the genmap results in `genmap/sorted_mappability.bg `:
+
+```
+JAJLRC010000027.1	0	22530	1
+JAJLRC010000027.1	22530	22583	0.5
+JAJLRC010000027.1	22583	22596	0.333333
+JAJLRC010000027.1	22596	22607	0.25
+JAJLRC010000027.1	22607	22631	0.333333
+JAJLRC010000027.1	22631	22637	0.5
+JAJLRC010000027.1	22637	23160	1
+JAJLRC010000027.1	23160	23213	0.5
+JAJLRC010000027.1	23213	23226	0.333333
+JAJLRC010000027.1	23226	23237	0.25
+```
+
+Here, the good regions have a mapping score of '1' (4th column), indicating that 150bp kmers in that region are unique, and not found elsewhere in the genome. snpArcher uses these regions to create the 2nd callable sites mask, which is in `callable_sites/cracherodi_callable_sites_map.bed`
+
+```
+JAJLRC010000027.1	0	22530
+JAJLRC010000027.1	22637	23160
+JAJLRC010000027.1	23267	66863
+JAJLRC010000027.1	67231	67511
+JAJLRC010000027.1	67879	128758
+JAJLRC010000027.1	128935	129079
+JAJLRC010000027.1	129193	130698
+JAJLRC010000027.1	130964	133138
+JAJLRC010000027.1	133284	133761
+JAJLRC010000027.1	133876	137261
+```
+
+Now, as you might be guessing, the final callable sites file `cracherodi_callable_sites.bed` is the combination of the `cov` and `map` files. We'll talk about that more in a bit, but let's look more closely at what the genmap results say about the reference genome.
+
+We'll do this in `R`:
 
 ```
 genmap = 
@@ -97,14 +158,9 @@ How much of the genome is perfectly mappable (score = 1)?
 12 0.0833       12 0.00000206
 ```
 
-
-> **Question**:
-> Why do I need to calculate length as `end - start - 1`? Why is the file formatted that way?
-
-
 > **Exercise**:
 > 
-> Write a bed-formatted file of all regions with score == 1 that you could use for filtering other types of data
+> How much do the coverage and map masks overlap? 
 
 ## Alignment summary metrics
 
