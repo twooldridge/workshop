@@ -10,9 +10,9 @@ This workshop is intended to be flexible, so topics can be added or dropped as n
 Last thing - if you have suggestions for what to add to these workshop pages for your future self or other researchers, please let me know. I want to make this as useful as possible.
 
 ## Main modules
-- [Setup](https://github.com/twooldridge/workshop/blob/main/terminal.md)
-- [Command line familiarity, working on servers](https://github.com/twooldridge/workshop/blob/main/misc.md): 
+- [Setup](https://github.com/twooldridge/workshop/blob/main/terminal.md): Most of this will be done for you prior to the workshop (thanks Miguel!), but feel free to reference this in the future if you find yourself working in a different space.
+- [Command line familiarity, working on servers](https://github.com/twooldridge/workshop/blob/main/misc.md): The basics of working on the command line and on a server. Far from complete!
 - [snpArcher setup and execution](https://github.com/twooldridge/workshop/blob/main/snpArcher.md): Configuring snpArcher and running on whole genome data
-- [Evaluating snpArcher results](https://github.com/twooldridge/workshop/blob/main/results.md): Basic walkthrough of initial snpArcher output, as well as some good follow-up analyses in `R`/`python`/`bash`
-- [ANGSD and genotype likelihoods](https://github.com/twooldridge/workshop/blob/main/angsd.md): 
+- [Evaluating snpArcher results](https://github.com/twooldridge/workshop/blob/main/results.md): Basic walkthrough of initial snpArcher output, as well as some instructive follow-up analyses in `R`/`python`/`bash`
+- [ANGSD and genotype likelihoods](https://github.com/twooldridge/workshop/blob/main/angsd.md): PCA, diversity & selection stats, etc. all without variant calls
 - [Advanced tasks](): GitHub, jupyter notebook workflow, etc.
