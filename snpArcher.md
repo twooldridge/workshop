@@ -164,6 +164,13 @@ Once we've ensured that everything is up and running, we can use the remaining t
 
 # Discussion
 
+Let's talk about the new abalone data that you all will be analyzing soon, and think if there are snpArcher parameters we need to adjust for.
+
+1) How many samples?
+2) Breadth of coverage?
+3) Size of reference genome? Scaffolds in reference genome? Quality?
+4) Will we be combining these data with another dataset (older, other population, etc.) at some point in time? 
+
 
 
 
