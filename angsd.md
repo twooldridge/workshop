@@ -54,3 +54,48 @@ ggplot(pca_results, aes(x = `1`,y = `2`)) +
 
 
 # Diversity and selection stats
+
+We can also use ANGSD to generate estimates of population diversity, Fst, etc. Here's the rough order of operations:
+
+1) Use `doSaf` to  create a 'site allele frequency likelihood file'
+2) Use `realSFS` to generate an estimate of the site frequency spectrum
+3) Use the outputs of 1) and 2) with `realSFS saf2theta` to calculate theta values
+4) Use the output of 3) with `thetaStat print` or `thetaStat do_stat` to print theta values and selection stats, respectively.
+
+> [!IMPORTANT]  
+> ANGSD accepts many types of input for step 1 to work. In *theory*, we could use the same beagle file generated for the PCA exercise above. However, when not limited by time or resources, I like to start from the raw bam files again, as those contain much more information for ANGSD to generate its estimates from. The BEAGLE file is already a layer removed from the raw alignments, and so some info is necessarily lost.
+
+Ok, with that note, here are the commands for steps 1-3, which will run fairly quickly for our toy dataset:
+```
+# Generate SAF. This runs in about 1-2 minutes with 10 cpus for our ~5MB scaffold
+angsd -bam angsd/bamlist.txt -doSaf 1 -ref refs/JAJLRC010000027.1.fa -anc refs/JAJLRC010000027.1.fa -C 50 -minMapQ 30 -minQ 20 -GL 2 -P 10 -out angsd/abalone 
+
+# Generate folded SFS - we can discuss folded v. unfolded at this point (or later). This runs in about 2-3 minutes with 10 cpus
+realSFS angsd/abalone.saf.idx -P 10 -fold 1 > angsd/abalone.folded.sfs
+
+# Generate thetas, runs in about a minute
+realSFS saf2theta angsd/abalone.saf.idx -outname angsd/abalone -sfs angsd/abalone.folded.sfs -fold 1
+```
+
+Ok, assuming all of that ran smoothly, now we can move onto generate sum windowed-statistics to explore! Because we know *a priori* that abalone have a lot of sequence diversity, we can use some relatively small windows here. This will run almost instantly:
+
+```
+thetaStat do_stat angsd/abalone.thetas.idx -win 25000 -step 5000 -outnames angsd/abalone.25kb_by_5kb
+```
+
+Now we can visualize these results in R. Let's start with theta pi:
+
+```
+thetas = fread('~/Downloads/transfer/abalone.25kb_by_5kb.pestPG')
+ggplot(thetas, aes(x = WinCenter, y = tP)) +
+    geom_point() +
+    theme_classic()
+```
+
+![image](https://github.com/user-attachments/assets/dd0d50f8-5a6d-4ce6-aea1-6ff4ff6f09b0)
+
+
+** Exercises **: 
+1) How do we rescale theta pi so that it's reflected as a percentage, as is often reported?
+2) What are some simple solutions to make sure that the values here aren't driven by poor quality regions of the genome?
+
