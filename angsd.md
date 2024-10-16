@@ -95,7 +95,7 @@ ggplot(thetas, aes(x = WinCenter, y = tP)) +
 ![image](https://github.com/user-attachments/assets/dd0d50f8-5a6d-4ce6-aea1-6ff4ff6f09b0)
 
 
-** Exercises **: 
+**Exercises**: 
 1) How do we rescale theta pi so that it's reflected as a percentage, as is often reported?
 2) What are some simple solutions to make sure that the values here aren't driven by poor quality regions of the genome?
 
