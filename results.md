@@ -280,10 +280,34 @@ ggplot(ld) +
 
 ## Local-pca-with-lostruct
 
-[Lostruct](https://github.com/petrelharp/local_pca) functions as an R package, so we'll run all analyses via R:
+[Lostruct](https://github.com/petrelharp/local_pca) functions as an R package, so we'll run all analyses via R. With the size of this scaffold, we can actually get the first PC windows pretty easily!
 
 ```
-library(l
+library(lostruct)
+## Read in VCF and do windowed PCA
+snps <- vcf_windower("~/Downloads/transfer/cracherodi_clean_snps.vcf.gz",size=1e3,type='snp')
+pcs <- eigen_windows(snps,k=2) # Calculate for each window
+windows <- region(snps)() 
+
+## Some windows have NA values, let's remove those
+goodrows = !rowSums(!is.finite(pcs))
+goodwindows = windows[goodrows,]
+goodpcs = pcs[goodrows, ]
+
+## Now calculate distance between windows
+pcdist <- pc_dist(goodpcs,npc=2) # Distance between windows
+chr.mds <- cmdscale(pcdist, eig = TRUE, k = 2)
+pts = chr.mds$points %>% set_colnames(c('mds1','mds2'))
+
+## Let's plot these results
+mds_results_clean = bind_cols(goodwindows, pts) %>% mutate(midpoint = ((end-start)/2) + start)
+ggplot(mds_results_clean) +
+    geom_point(aes(x = midpoint, y = mds1)) +
+    theme_classic()
 ```
 
+![image](https://github.com/user-attachments/assets/489ae4c4-7f00-4f12-8d86-33bd553d3451)
 
+No striking conclusions to draw here! Typically you would look at this on a whole genome level, and do some sort outlier analyses to identify the interesting parts.
+
+**Question** This is just a first pass analysis. Can you imagine parameters that might be nice to change as we explore the data?
