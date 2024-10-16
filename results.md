@@ -4,7 +4,6 @@
 2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)<br>
   2.1 [Genome masks and callable sites](#Callable-sites)<br>
   2.2 [Other alignment metrics](#Alignment-summary-metrics)<br>
-  2.3 [Visualizing heterozygosity on a sample map](#Heterozygosity-on-a-map)<br><br>
 3. [Working with VCF data](#Working-with-VCF-data)<br>
   3.1 [Quick vcf stats](#Quick-stats)<br>
   3.2 [Re-running PCA with subset of samples](#PCA-on-a-smaller-sample-set)<br>
