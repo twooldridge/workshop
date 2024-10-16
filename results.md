@@ -5,8 +5,8 @@
   2.1 [Breakdown of output](#Where-are=the-results?)<br>
   2.2 [Genome masks and callable sites](#Callable-sites)<br>
   2.3 [Other alignment metrics](#Alignment-summary-metrics)<br>
-  2.4 [SNP QC metrics](#SNP-QC-metrics)<br>
-3. [Working with VCF data](#Working-with-VCF-data)<br>
+  2.4 [SNP QC metrics](#SNP-QC-metrics)<br><br>
+3. [Using the VCF output](#Working-with-VCF-data)<br>
   3.1 [Quick vcf stats](#Quick-stats)<br>
   3.2 [Re-running PCA with subset of samples](#PCA-on-a-smaller-sample-set)<br>
   3.3 [LD decay](#LD-decay)<br>
