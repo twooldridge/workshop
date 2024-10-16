@@ -1,10 +1,11 @@
 # Table of Contents
 
-1. [snpArcher QC dashboard](#QC)<br><br>
+1. [snpArcher QC dashboard](#QC-dashboard)<br><br>
 2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)<br>
-  2.1 [Genome masks and callable sites](#Callable-sites)<br>
-  2.2 [Other alignment metrics](#Alignment-summary-metrics)<br>
-  2.3 [SNP QC metrics]()<br>
+  2.1 [Breakdown of output](#Where-are=the-results?)<br>
+  2.2 [Genome masks and callable sites](#Callable-sites)<br>
+  2.3 [Other alignment metrics](#Alignment-summary-metrics)<br>
+  2.4 [SNP QC metrics](#SNP-QC-metrics)<br>
 3. [Working with VCF data](#Working-with-VCF-data)<br>
   3.1 [Quick vcf stats](#Quick-stats)<br>
   3.2 [Re-running PCA with subset of samples](#PCA-on-a-smaller-sample-set)<br>
@@ -12,7 +13,7 @@
   3.4 [Local PCA](#Local-pca-with-lostruct)
 
 ---
-# QC
+# QC dashboard
 
 In your `snpArcher` `results/cracherodii` folder you should see something that looks like this:
 
@@ -38,15 +39,46 @@ Okay, this dashboard is **extremely** useful for initial exploration of the data
 
 Now, we'll take a few moments to walk through this dashboard and discuss what everything means.
 
-Discussion topics:
-
-1. PC x Depth
-2. Mapping rate
-3. Relatedness
-
 ---
 
-# Exploring other snpArcher output
+# Exploring snpArcher output
+
+## Where are the results?
+
+Here is a quick list of all the content in the results folder, with my own ranking of how important each thing is:
+
+```
+Key:
+# IMPORTANT
+## KINDA IMPORTANT
+### MOSTLY IGNORE
+
+bams/                                   # The final bam files used as input for all variant calling
+callable_sites/                           ## Sequencing cov. files used to identify good/bad regions.
+cracherodi_callable_sites.bed           # Mask of 'good' regions of the genome used as a filter
+cracherodi_clean_indels.vcf.gz              ### Filtered vcf of just indels
+cracherodi_clean_indels.vcf.gz.tbi          ### ^Index
+cracherodi_clean_snps.vcf.gz                ### Filtered vcf of just snps
+cracherodi_clean_snps.vcf.gz.tbi            ### ^Index
+cracherodi_filtered.vcf.gz              # Primary vcf used for all downstream analyses
+cracherodi_filtered.vcf.gz.csi          # ^Index
+cracherodi_raw.vcf.gz                     ## Unfiltered vcf, hot off of variant calling - useful for sanity checking
+cracherodi_raw.vcf.gz.tbi                 ## ^Index
+data/                                       ### Files related to the reference genome
+filtered_fastqs/                            ### Fastq files filtered by fastp
+genmap/                                     ### Mappability maps
+genmap_index/                               ### Files for genmap to run
+genomics_db_import/                         ### Genomics DB workspace - GATK step between haplotype caller and cohort variant calling 
+gvcfs_norm/                                 ### Whole-genome GVCFs, output of haplotype caller
+interval_gvcfs/                             ### Interval-level GVCFs to stitch together ^
+intervals/                                  ### Files related to genomic intervals
+postprocess/                                ### Misc. files. Ignore.
+QC/                                     # QC dashboard and all files used to create it
+summary_stats/                          ## Files for each sample detailing fastp, alignment, and coverage metrics
+```
+
+
+
 
 ## Callable sites
 
