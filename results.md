@@ -355,6 +355,11 @@ snpqc =
 
 Based on these results, we can definitely see how some of the filters snpArcher implements, for excluding variants with MQ<40, will remove a small proportion of variants. While we haven't done any explicit calculations yet, this would suggest that overall we're not losing a bunch of data to filters. 
 
+You might imagine a scenario where, after seeing these, you want to
+a) Implement stricter filters (higher MQ?)
+b) Implement additional filters. 
+      - People will often remove sites with QD < 2. If I had to guess, that wouldn't have much of an effect here
+      - Implement a hardy-weinberg based filter. The small bump in allele frequency at 0.5 is likely an artifact due to mapping to homologs. If we were very concerned, we could try to reduce that by  removing variants violating some HWE threshold. However, you need to be careful with the nature of your dataset and the downstream analysis. Filtering based on HWE might not make sense if there is serious population structure, or you're doing a selection scan wwehre you want to identify such loci. 
 
 ## PCA on a smaller sample set
 Let's say we're really interested in relationships just within our northern samples, and we want a PCA of just them. We could filter samples in the `QC/cracherodi.eigenvec` file, but the more correct approach, especially if we want to report these data, would be to re-create a PCA with just the SNPs for those samples. There are many ways to do this, but the general approach I like is:
