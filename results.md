@@ -8,9 +8,10 @@
   2.4 [SNP QC metrics](#SNP-QC-metrics)<br><br>
 3. [Using the VCF output](#Working-with-VCF-data)<br>
   3.1 [Quick vcf stats](#Quick-stats)<br>
-  3.2 [Re-running PCA with subset of samples](#PCA-on-a-smaller-sample-set)<br>
-  3.3 [LD decay](#LD-decay)<br>
-  3.4 [Local PCA](#Local-pca-with-lostruct)
+  3.2 [More complex filtering](#Filtering)<br>
+  3.3 [Re-running PCA with subset of samples](#PCA-on-a-smaller-sample-set)<br>
+  3.4 [LD decay](#LD-decay)<br>
+  3.5 [Local PCA](#Local-pca-with-lostruct)
 
 ---
 # QC dashboard
@@ -287,6 +288,14 @@ bgzip -dc cracherodi_raw.vcf.gz | grep -v "##"  | less -S****
 > **Exercise**:
 > 
 > How do we quickly find, on the command line, the # of variants that are in a VCF?
+
+## Filtering
+
+Let's say we want to do some filtering to further explore the data and perform sanity checks on some of the variant sites. For example, say we're curious about some sites that didn't pass our filters:
+
+```
+
+```
 
 
 ## PCA on a smaller sample set
