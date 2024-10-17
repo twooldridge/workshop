@@ -271,14 +271,14 @@ If we're curious about what SNPs got filtered and what didn't, we can take advan
 Let's take a look:
 
 ```
-CHROM  POS  ?  AF  QUAL  ReadPosRankSum  FS  SOR  MQ  MQRankSum
+CHROM  POS  ID  AF  QUAL  ReadPosRankSum  FS  SOR  MQ  MQRankSum
 JAJLRC010000027.1	26	.	0.536	410.83	0.967	0	2.833	52.24	-0.431
 JAJLRC010000027.1	77	.	0.067	62.42	.	0	2.303	60	.
 JAJLRC010000027.1	153	.	0.071	51.31	.	0	0.693	49.82	.
 JAJLRC010000027.1	168	.	0.094	72.08	-0.674	0	0.223	54	-0.674
 JAJLRC010000027.1	211	.	0.233	462.71	0.967	3.256	0.61	53.88	0
 ```
-By default, snpArcher removes SNPs with ReadPosRankSum < -8.0, FS > 60, SOR > 3, MQ < 40, and MQRankSum < -12.5. A couple of these rules change for indels.
+By default, snpArcher removes SNPs with QUAL < 30, ReadPosRankSum < -8.0, FS > 60, SOR > 3, MQ < 40, and MQRankSum < -12.5. A couple of these rules change for indels.
 
 It can be interesting to explore the distributions of some of these metrics, and get a sense of overall data quality. Let's load this in R and visualize:
 
@@ -286,8 +286,8 @@ It can be interesting to explore the distributions of some of these metrics, and
 snpqc =
   ## Read and format
   fread('~/Downloads/transfer/cracherodi_snpqc.txt') %>%
-  set_colnames(c('chrom','pos','m','AF','QUAL','ReadPosRankSum','FS','SOR','MQ','MQRankSum')) %>%
-  dplyr::select(!m) %>%
+  set_colnames(c('chrom','pos','ID','AF','QUAL','ReadPosRankSum','FS','SOR','MQ','MQRankSum')) %>%
+  dplyr::select(!ID) %>%
   ## Change missing values '.' to NA
   mutate(across(!chrom,~as.numeric(.))) %>%
   ## Reshape data frame
@@ -326,11 +326,34 @@ bgzip -dc cracherodi_raw.vcf.gz | grep -v "##"  | less -S****
 
 ## Filtering
 
-Let's say we want to do some filtering to further explore the data and perform sanity checks on some of the variant sites. For example, say we're curious about some sites that didn't pass our filters:
+Ok, let's return to our earlier exercise where we looked at some of the metrics of our SNP calls. Let's say we want to take a deeper dive into what SNPs failed our filters, and look at a few other metrics in the INFO field as well. `bcftools` is a great way to accomplish this:
 
 ```
+bcftools query -f '%CHROM\t%POS\t%ID\t%INFO/AF\t%QUAL\t%INFO/ReadPosRankSum\t%INFO/FS\t%INFO/SOR\t%INFO/MQ\t%INFO/MQRankSum\t%INFO/QD\t%INFO/ExcessHet\n' cracherodi_raw.vcf.gz > raw_vcf_stats.txt
+```
+
+Now, we can perform a similar exercise as before and plot the distributions of these metrics:
 
 ```
+snpqc =
+  ## Read and format
+  fread('~/Downloads/transfer/raw_vcf_stats.txt') %>%
+  set_colnames(c('chrom','pos','ID','AF','QUAL','ReadPosRankSum','FS','SOR','MQ','MQRankSum','QD','ExcessHet')) %>%
+  dplyr::select(!ID) %>%
+  ## Change missing values '.' to NA
+  mutate(across(!chrom,~as.numeric(.))) %>%
+  ## Reshape data frame
+  pivot_longer(-c(chrom,pos)) 
+
+## Now plot
+  ggplot(snpqc) +
+      geom_density(aes(x = value)) +
+      facet_wrap(~name, scales = 'free')
+```
+
+![image](https://github.com/user-attachments/assets/7b1eda97-cea3-42f7-9a8d-9c0acb83de40)
+
+Based on these results, we can definitely see how some of the filters snpArcher implements, for excluding variants with MQ<40, will remove a small proportion of variants. While we haven't done any explicit calculations yet, this would suggest that overall we're not losing a bunch of data to filters. 
 
 
 ## PCA on a smaller sample set
