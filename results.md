@@ -263,7 +263,10 @@ ggplot(secondary) +
 
 ## SNP QC metrics
 
-If we're curious about what SNPs got filtered and what didn't, we can take advantage of the file `QC/cracherodi_snpqc.txt` which is already nicely formatted with some of the key metrics used for SNP filtering, at least by snpArcher.
+If we're curious about what SNPs got filtered and what didn't, we can take advantage of the file `QC/cracherodi_snpqc.txt` which is already nicely formatted with some of the key metrics used for SNP filtering, at least by snpArcher. 
+
+> [!IMPORTANT]
+> This file doesn't represent all SNPs in the clean vcfs, but just the snps that are present in `QC/cracherodi.pruned.vcf.gz`. Those "pruned" vcf is the one used for PCA and some of the other stats were you don't want SNPs linked by LD. Regardless, this file is still a good representation of variant characteristics in our data
 
 Let's take a look:
 
@@ -277,7 +280,7 @@ JAJLRC010000027.1	211	.	0.233	462.71	0.967	3.256	0.61	53.88	0
 ```
 By default, snpArcher removes SNPs with ReadPosRankSum < -8.0, FS > 60, SOR > 3, MQ < 40, and MQRankSum < -12.5. A couple of these rules change for indels.
 
-It can be interesting to explore the distributions of some of these metrics, and get a sense of how much data we might be 'losing'. Let's load this in R and visualize:
+It can be interesting to explore the distributions of some of these metrics, and get a sense of overall data quality. Let's load this in R and visualize:
 
 ```
 snpqc =
@@ -297,7 +300,7 @@ ggplot(snpqc) +
 ```
 ![image](https://github.com/user-attachments/assets/ed08dfc6-3f8a-430c-a5bd-c84758090472)
 
-
+As you can see by these distributions, these represent the metrics of SNPs that were already filtered. If we want a report on the raw data, we'll have to do some extra work (see 'More complex filtering').
 
 ---
 
