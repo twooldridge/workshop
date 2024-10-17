@@ -266,7 +266,7 @@ ggplot(secondary) +
 If we're curious about what SNPs got filtered and what didn't, we can take advantage of the file `QC/cracherodi_snpqc.txt` which is already nicely formatted with some of the key metrics used for SNP filtering, at least by snpArcher. 
 
 > [!IMPORTANT]
-> This file doesn't represent all SNPs in the clean vcfs, but just the snps that are present in `QC/cracherodi.pruned.vcf.gz`. Those "pruned" vcf is the one used for PCA and some of the other stats were you don't want SNPs linked by LD. Regardless, this file is still a good representation of variant characteristics in our data
+> This file doesn't represent all SNPs in the clean vcfs, but just the snps that are present in `QC/cracherodi.pruned.vcf.gz`. This "pruned" vcf is the one used for PCA and some of the other stats were you don't want SNPs linked by LD. Regardless, this file is still a good representation of variant characteristics in our data
 
 Let's take a look:
 
