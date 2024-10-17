@@ -263,7 +263,39 @@ ggplot(secondary) +
 
 ## SNP QC metrics
 
-MAF exercise
+If we're curious about what SNPs got filtered and what didn't, we can take advantage of the file `QC/cracherodi_snpqc.txt` which is already nicely formatted with some of the key metrics used for SNP filtering, at least by snpArcher.
+
+Let's take a look:
+
+```
+CHROM               POS   ?   AF      QUAL      ReadPosRankSum  FS      SOR     MQ       MQRankSum
+JAJLRC010000027.1	  26	  .	  0.536	  410.83	  0.967	          0	      2.833	  52.24	   -0.431
+JAJLRC010000027.1	  77	  .	  0.067	  62.42	    .	              0	      2.303	  60	     .
+JAJLRC010000027.1	  153	  .	  0.071	  51.31	    .	              0	      0.693	  49.82	   .
+JAJLRC010000027.1	  168	  .	  0.094	  72.08	    -0.674          0	      0.223	  54	     -0.674
+JAJLRC010000027.1	  211	  .	  0.233	  462.71	  0.967	          3.256	  0.61	  53.88	   0
+```
+By default, snpArcher removes SNPs with ReadPosRankSum < -8.0, FS > 60, SOR > 3, MQ < 40, and MQRankSum < -12.5. A couple of these rules change for indels.
+
+It can be interesting to explore the distributions of some of these metrics, and get a sense of how much data we might be 'losing'. Let's load this in R and visualize:
+
+```
+snpqc =
+  ## Read and format
+  fread('~/Downloads/transfer/cracherodi_snpqc.txt') %>%
+  set_colnames(c('chrom','pos','m','AF','QUAL','ReadPosRankSum','FS','SOR','MQ','MQRankSum')) %>%
+  dplyr::select(!m) %>%
+  ## Change missing values '.' to NA
+  mutate(across(!chrom,~as.numeric(.))) %>%
+  ## Reshape data frame
+  pivot_longer(-c(chrom,pos)) 
+
+## Now plot
+ggplot(snpqc) +
+  geom_density(aes(x = value)) +
+  facet_wrap(~name, scales = 'free')
+```
+![image](https://github.com/user-attachments/assets/ed08dfc6-3f8a-430c-a5bd-c84758090472)
 
 
 
