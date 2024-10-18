@@ -1,6 +1,6 @@
 # Configuring snpArcher
 
-Ok, the following assumes that you have already setup a snpArcher conda environment and have successfully executed the examlpe datasets (see [setup](https://github.com/twooldridge/workshop/blob/main/terminal.md) let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
+Ok, the following assumes that you have already setup a snpArcher conda environment and have successfully executed the examlpe datasets (see [setup](https://github.com/twooldridge/workshop/blob/main/terminal.md)). Let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
 
 ```
 mkdir -p data      # Where raw data goes
@@ -11,14 +11,16 @@ mkdir -p logs      # Where output files will go
 mkdir -p downloads # Self explanatory
 ```
 
-We'll add more folders as we proceed with analysis. Now let's download the toy data we need for this course. I've prepared these in advance so that we can run through analyses in real time. To do this, we're only including 20 individual black abalone of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000027.1`) to reduce file size and run time. 
+We'll add more folders as we proceed with analysis. Now let's talk about the toy data I've prepared so that we can run through analyses in real time. To do this, we're only including 20 individual black abalone of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000027.1`) to reduce file size and run time. 
 
 > [!TIP]
 > In general, whenever you're testing something new, start small! I like to pick a favorite scaffold or region for a reference genome I work with before I do something on the whole genome. This will make it easier to troubleshoot and save you time before scaling up!
 
 ```
-## Download fastq data we'll be using. This isn't the 'rawest' data format, they are example reads I've subsampled from the data in the 2024 paper.
-{from google drive}
+## You should have already downloaded the fastq data we'll be using. This isn't the 'rawest' data format so the reads would be a little cleaner than expected, they are example reads I've subsampled from the data in the 2024 paper.
+## Once you have them downloaded from google drive, go ahead and move them to the `downloads` folder.
+## Ex: 
+scp -r ~/Downloads/fastq.tar.gz ${USER}@${SERVER}:${WORKDIR}/downloads/
 
 ## Download black abalone reference genome straight from NCBI. This should complete in less than a minute
 datasets download genome accession GCA_022045235.1 --include genome --filename downloads/cracherodii.zip;unzip -o downloads/cracherodii.zip
@@ -87,7 +89,7 @@ For the 'might change', there are a few interesting parameters. Let's discuss:
 ## I personally like to set MAF to '0' and do all filtering downtream, the analysis.
 ## For example, in a selection scan, you might want to include even the lowest frequency
 ## variants as long as they pass the other filtering criteria.
-maf: 0.00
+maf: 0
 
 ## This doesn't apply to our toy dataset, but for whole genome data you might want to exclude
 ## the abalone mitogenome, or perhaps other scaffolds with known problems.
