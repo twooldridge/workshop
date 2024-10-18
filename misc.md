@@ -1,3 +1,48 @@
+# SLURM
+
+You may already be familiar with SLURM basics, but for everyone's sake I've included a very brief primer with some of the slurm commands I reference daily. First off, SLURM is a popular job scheduling system for clusters. It allows you to structure and run intensive processes in a contained way that minimizes really screwing up the server. 
+
+The basic format of a slurm script is:
+
+```
+#!/bin/bash
+#SBATCH --job-name=my_job          # Job name
+#SBATCH -o logs/output.o           # Standard output log
+#SBATCH -e logs/output.e           # Error log. You can specifu the same file for both output and error if you want
+#SBATCH -N 1                       # Number of nodes - it is unlikely you will every mess with that
+#SBATCH -n 1                       # Number of tasks (processes)
+#SBATCH -c 1                       # Number of threads(cpus) - this is what you will change when you want to run something multithreaded
+#SBATCH --time=00:10:05            # Time limit hrs:min:sec
+#SBATCH --mem=1000                 # Memory limit in MB
+#SBATCH -p big_partition           # The name of whatever partition you're submitting the job too. Many clusters will have specialized partitions for long or big mem jobs
+
+## Code here
+sleep 600
+
+```
+And you can submit a script formatted that way by simply running `sbatch script.sh`!
+
+To check on all jobs that are running, you can use:
+
+```
+squeue -u tywooldr    # Replace with your username. This shows pending and running jobs.
+sacct                 # This shows all your jobs, including completed/failed ones and the resources they used. This can be useful for refining workflows in the future and providing the right amount of resources
+```
+
+If you want to submit a job on the fly and not write a script, you can also do something like this:
+```
+sbatch --mem=1000 --time=00:10:05 --wrap="sleep 600"
+```
+Which will run the command inside `wrap` with default parameters for anything not specified (as per usual). 
+
+Sometimes we want to interactively play with lots of data and run processes that require a lot of memory. For this, we set up an **interactive** job. The followiing command gives you a pseudo-terminal (`--pty`) with 5000MB RAM and 8 cpus for 2 hours.
+
+```
+srun --pty --mem=5000 --time=02:00:00 -c 8 bash
+```
+
+This job will end as soon as you close the terminal. If you want to be able to close your computer and return to the interactive job later, then `screen` is your tool!
+
 # What is `screen` and why do we use it
 
 The `screen` command is essential for managing multiple terminal sessions. It allows you to disconnect from your terminal and have your session/command keep running. In our case, this will be particularly useful for running the head `snpArcher` job that does the organizing and job tracking via snakemake. 
