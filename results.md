@@ -42,7 +42,7 @@ Okay, this dashboard is **extremely** useful for initial exploration of the data
 
 Now, we'll take a few moments to walk through this dashboard and discuss what everything means.
 
----
+
 
 # Exploring other `snpArcher` output
 
@@ -330,7 +330,7 @@ bgzip -dc cracherodi_raw.vcf.gz | grep -v "##"  | less -S****
 
 ## Filtering
 
-Ok, let's return to our earlier exercise where we looked at some of the metrics of our SNP calls. Let's say we want to take a deeper dive into what SNPs failed our filters, and look at a few other metrics in the INFO field as well. `bcftools` is a great way to accomplish this:
+Ok, let's return to our earlier exercise, where we looked at some of the metrics of our SNP calls. Let's say we want to take a deeper dive into what SNPs failed our filters and look at a few other metrics in the INFO field as well. `bcftools` is a great way to accomplish this:
 
 ```
 bcftools query -f '%CHROM\t%POS\t%ID\t%INFO/AF\t%QUAL\t%INFO/ReadPosRankSum\t%INFO/FS\t%INFO/SOR\t%INFO/MQ\t%INFO/MQRankSum\t%INFO/QD\t%INFO/ExcessHet\n' cracherodi_raw.vcf.gz > raw_vcf_stats.txt
@@ -359,17 +359,17 @@ snpqc =
 ![image](https://github.com/user-attachments/assets/7b1eda97-cea3-42f7-9a8d-9c0acb83de40)
 
 
-Based on these results, we can see how some of the filters snpArcher implements for excluding variants with MQ<40 will remove a small proportion of variants. While we haven't done any explicit calculations yet, this would suggest that we're not losing data to filters. 
+Based on these results, we can see how some of the filters snpArcher implements for excluding variants with MQ<40 will remove a small proportion of variants. While we have yet to do any explicit calculations, this would suggest we're not losing data to filters. 
 
 You might imagine a scenario where, after seeing these, you want to:<br>
     **a)** Implement stricter filters (higher MQ?)<br>
     **b)** Implement additional filters.<br>
         - People will often remove sites with QD < 2. If I had to guess, that wouldn't have much of an effect here<br>
-        - Implement a hardy-weinberg based filter. The small bump in allele frequency at 0.5 is likely an artifact due to mapping to homologs. If we were very concerned, we could try to reduce that by  removing variants violating some HWE threshold. However, you need to be careful with the nature of your dataset and the downstream analysis. Filtering based on HWE might not make sense if there is serious population structure, or you're doing a selection scan wwehre you want to identify such loci. 
+        - Implement a Hardy-Weinberg-based filter. The small bump in allele frequency at 0.5 is likely an artifact due to mapping to homologs. If we were very concerned, we could try to reduce that by  removing variants violating some HWE threshold. However, you need to be careful with the nature of your dataset and the downstream analysis. Filtering based on HWE might not make sense if there is a serious population structure or you're doing a selection scan where you want to identify such loci. 
 
 ## PCA on a smaller sample set
 
-Let's say we're really interested in relationships just within our northern samples, and we want a PCA of just them. We could filter samples in the `QC/cracherodi.eigenvec` file, but the more correct approach, especially if we want to report these data, would be to re-create a PCA with just the SNPs for those samples. There are many ways to do this, but the general approach I like is:
+Let's say we're really interested in relationships just within our northern samples, and we want a PCA of just them. We could filter samples in the `QC/cracherodi.eigenvec` file, but the correct approach, especially if we want to report these data, would be to re-create a PCA with just the SNPs for those samples. There are many ways to do this, but the general approach I like is:
 
 1. Filter `VCF` files with `bcftools`
 2. PCA with `plink`
@@ -388,7 +388,7 @@ bcftools +prune -n 1 -N rand -w 1kb -O z \
 > PCA/north_samples_snps.vcf.gz && tabix PCA/north_samples_snps.vcf.gz
 ```
 
-Okay, let's walk through the above filtering steps, and why we do them. How many variants are we left with?
+Okay, let's walk through the above filtering steps and explain why we do them. How many variants are we left with?
 
 
 Now, we can use `plink` for the PCA:
@@ -410,11 +410,11 @@ PCA =
 
 > **Exercise**:
 > 
-> How can we use the snpArcher output to generate the same plot, but with samples color-coded by sequence depth?
+> How can we use the snpArcher output to generate the same plot but with samples color-coded by sequence depth?
 
 # LD Decay
 
-A key aspect of becoming acquainted with any new popgen system is an understanding of how linkage disequilibrium, or the correlation between SNPs, is a function of physical distance along the chromosome. By understanding this, it can inform how we 'prune' SNPs for analyses like PCA and help identify SNP-SNP correlations that are abnormal (and potentially interesting!). 
+A key aspect of becoming acquainted with any new popgen system is understanding how linkage disequilibrium, or the correlation between SNPs, is a function of physical distance along the chromosome. By understanding this, it can inform how we 'prune' SNPs for analyses like PCA and help identify SNP-SNP correlations that are abnormal (and potentially interesting!). 
 
 To get a basic sense of this, we'll use the program `PopLDDecay`. Implementation is very simple:
 
@@ -423,7 +423,7 @@ mkdir -p LD
 PopLDdecay -InVCF snpArcher/results/cracherodii/cracherodi_clean_snps.vcf.gz -OutStat LD/decay -MaxDist 100 -OutType 1
 ```
 
-Hmm, seems like this might take a minute or two to run. Alternatively, we can submit this as a `slurm` job, and we'll check on the results later:
+Hmm, this might take a minute or two to run. Alternatively, we can submit this as a `slurm` job, and we'll check on the results later:
 
 
 ```
@@ -449,11 +449,15 @@ ggplot(ld) +
 
 ![image](https://github.com/user-attachments/assets/ff8a73de-ad98-4177-b0d3-48e219a9670f)
 
-**Exercise**: r^2 = 0.2 is often a threshold used for considering snps unlinked. We can see that LD decays below that quickly. If we want to be extra conservative, at what physical distance (bp) does r^2 drop below 0.10?
+
+
+> **Exercise**: r^2 = 0.2 is often a threshold used for considering SNPs unlinked. We can see that LD decays below that quickly. If we want to be extra conservative, at what physical distance (bp) does r^2 drop below 0.10?
+
+
 
 ## Local-pca-with-lostruct
 
-[Lostruct](https://github.com/petrelharp/local_pca) functions as an R package, so we'll run all analyses via R. With the size of this scaffold, we can actually get the first PC windows pretty easily!
+[Lostruct](https://github.com/petrelharp/local_pca) functions as an `R` package, so we'll run all analyses via `R`. With the size of this scaffold, we can actually get the first PC windows pretty easily!
 
 ```
 library(lostruct)
@@ -481,6 +485,6 @@ ggplot(mds_results_clean) +
 
 ![image](https://github.com/user-attachments/assets/489ae4c4-7f00-4f12-8d86-33bd553d3451)
 
-No striking conclusions to draw here! Typically you would look at this on a whole genome level, and do some sort outlier analyses to identify the interesting parts.
+There are no striking conclusions to draw here! Typically, you would look at this on a whole genome level and do some sort of outlier analyses to identify the interesting parts.
 
-**Question** This is just a first pass analysis. Can you imagine parameters that might be nice to change as we explore the data?
+> **Question** This is just a first-pass analysis. Can you imagine parameters that might be nice to change as we explore the data?
