@@ -1,3 +1,17 @@
+# Table of contents
+
+1. [SLURM](#slurm)
+2. [What is `screen` and why do we use it](#what-is-screen-and-why-do-we-use-it)
+3. [Sed: a brief primer](#sed-a-brief-primer)
+    1. [Basic substitutions](#basic-substitutions)
+    2. [Deleting lines](#deleting-lines)
+    3. [Printing lines](#printing-lines)
+    4. [Editing-in place](#editing-in-place)
+5. [Awk: a nice complement of sed](#awk-a-nice-complement-to-sed)
+
+   
+
+
 # `SLURM`
 
 You may already be familiar with `SLURM` basics, but for everyone's sake, I've included a brief primer with some of the daily `SLURM` commands I reference. First off, **what's `SLURM`?**
@@ -73,7 +87,7 @@ This command will run for 5 minutes. In the meantime, we can exit our screen ses
 
 To kill the session, type `screen -X -S example kill`.
 
-Okay, that's pretty much all you need to know for now! You can see how having multiple screens can be helpful for running long tasks that aren't submitted to a cluster (for example, on your own computer). 
+Okay, that's all you need to know for now! You can see how having multiple screens can be helpful for running long tasks that aren't submitted to a cluster (for example, on your own computer). 
 
 > [!TIP]
 > There's also an alternative to `screen` called [`tmux`](https://github.com/tmux/tmux/wiki).
@@ -90,7 +104,7 @@ sed [OPTIONS] 'COMMAND' file
 
 Let's start with some examples from our `samples.csv` file, which we'll be using for `snpArcher`. 
 
-## Basic substitution
+## Basic substitutions
 
 To replace a string, we use the `s` command. Let's say that we've made an error with our file paths in `samples.csv`, and we need to replace `data` with `fastq`:
 
@@ -133,9 +147,13 @@ cp samples.csv dummy.csv    # Make a copy to avoid editing our original file in 
 sed -i -r '/,37.[0-9]+,/d' dummy.csv    # Take our complex command from earlier
 cat dummy.csv
 ```
+
+
 Looks like it worked! Ok, that's enough of a primer for now.
 
+
 # Awk: a nice complement to sed
+
 
 How does *AWK* work? Well, it breaks each line of input passed to it into fields. By default, a field is a string of consecutive characters delimited by whitespace, though there are options for changing this. Awk parses and operates on each separate field. This makes it ideal for handling structured text files- especially tables- and organizing data into consistent chunks, such as rows and columns.
 
@@ -148,35 +166,37 @@ For example:
 echo one two | awk '{print $1}'
 # one
 ```
+
+
 While each block in `curly brackets` will be executed every time a new line is read, we can execute commands right after `awk` processes the input and after it has processed all input with commands `BEGIN` and `END`. And, it also supports some pre-defined and automatic variables to help you write your programs. Among them, you will often encounter:
 
-- NR: The current input record number. Assuming we are delimiting our "records" withe newlines, this will match the line number being processed.
-- NF: Number of fields of the line being processed.
-- FS/OFS: Infput field separator and output field separator.
+- `NR`: The current input record number. Assuming we are delimiting our "records" withe newlines, this will match the line number being processed.
+- `NF`: Number of fields of the line being processed.
+- `FS`/`OFS`: Input and output field separators.
 
-> For example, we have our `samples.csv` and want to count per record (line) how many fields we have, and for how many we have the minimum required (5).
-> ```
-> awk 'BEGIN{FS=","; counter=0}NF==5{counter=counter+1}END{print "Number of records with minimum number of fields: ", counter}' samples.csv
-> ```
+For example, we have our `samples.csv` and want to count per record (line) how many fields we have and for how many we have the minimum required (5).
+```
+awk 'BEGIN{FS=","; counter=0}NF==5{counter=counter+1}END{print "Number of records with minimum number of fields: ", counter}' samples.csv
+```
 
 
-> **Example 2:**
-> Now, let's try to do something more applicable to our data. We want to get information from the `samples.csv` file, as we did with `sed`. Imagine we want to know from the samples file how many are too far north (latitude > 37) and which is the farthest North.
-> ```
-> # Column 1 is BioSample
-> # Column 10 is latitude
-> awk 'BEGIN{
->      maxlatitude=0;
->     counter=0;
->   maxsample=""}
->   $10>37{
->     counter=counter+1;
->     if (maxlatitude<$10) {
->       maxlatitude=$10;
->        maxsample=$1
->      }
->    }
->    END{
->      print "Number of samples up north: ",counter,"\nFarthest North is sample: ",maxsample, " at ", maxlatitude, "latitude". 
->    }' samples.csv
->```
+Now, let's try to do something more applicable to our data. We want to get information from the `samples.csv` file, as we did with `sed`. Imagine we want to know from the samples file how many are too far north (latitude > 37) and which is the farthest North.
+
+```
+ # Column 1 is BioSample
+ # Column 10 is latitude
+ awk 'BEGIN{
+      maxlatitude=0;
+     counter=0;
+   maxsample=""}
+   $10>37{
+     counter=counter+1;
+     if (maxlatitude<$10) {
+       maxlatitude=$10;
+        maxsample=$1
+      }
+    }
+    END{
+      print "Number of samples up north: ",counter,"\nFarthest North is sample: ",maxsample, " at ", maxlatitude, "latitude". 
+    }' samples.csv
+```
