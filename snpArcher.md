@@ -1,3 +1,10 @@
+# Table of contents
+
+1. [Setting up a `snpArcher` run](#setting-up-a-snparcher-run)
+2. `snpArcher` config file](#snparcher-config-file)
+3. [Running `snpArcher`](#running-snparcher)
+4. [Discussion](#discussion) 
+
 # Setting up a `snpArcher` run
 
 Ok, the following assumes that you have already set up a `snpArcher` Conda environment and have successfully executed the example datasets (see [setup](https://github.com/twooldridge/workshop/blob/main/terminal.md)). Let's do some other organizational things in the project folder before we start. Your philosophy on the organization of your working directories may differ, but there has to be one. The idea is that you can understand and localize your analyses easily. Here's an example of the way we will be organizing the data for the workshop:
@@ -17,10 +24,9 @@ We'll add more folders as we proceed with the analysis. Now, let's talk about th
 > - Generally, when testing something new, **start small!**
 > - I like to pick a favorite scaffold or region for a reference genome I work with before I do something on the whole genome. This will make troubleshooting easier and save you time before scaling up!
 
-You should have already downloaded the `FASTQ` data we'll use. This isn't the 'rawest' data format, so the reads would be cleaner than expected. They are example reads I've subsampled from the data in the 2024 paper. Once you have them downloaded from google drive, move them to the `downloads` folder.
+You should have already downloaded the `FASTQ` data we'll use. This isn't the 'rawest' data format, so the reads would be cleaner than expected. They are example reads I've subsampled from the data in the 2024 paper. Once you have them downloaded from Google Drive, move them to the `downloads` folder.
 
 ```
-## Ex: 
 scp -r ~/Downloads/fastq.tar.gz ${USER}@${SERVER}:${WORKDIR}/downloads/
 ```
 
@@ -33,7 +39,7 @@ unzip -o downloads/cracherodii.zip
 ```
 
 
-some data organization: 
+Some data organization: 
 
 
 ```
@@ -60,7 +66,7 @@ cp downloads/samples.csv snpArcher/config/samples.csv
 There! Everything should be nice and organized now. 🎉
 
 
-## `snpArcher` config file:
+# `snpArcher` config file:
 
 ```
 cd snpArcher
