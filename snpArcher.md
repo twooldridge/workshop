@@ -1,7 +1,7 @@
 # Table of contents
 
 1. [Setting up a `snpArcher` run](#setting-up-a-snparcher-run)
-2. `snpArcher` config file](#snparcher-config-file)
+2. [`snpArcher` config file](#snparcher-config-file)
 3. [Running `snpArcher`](#running-snparcher)
 4. [Discussion](#discussion) 
 
