@@ -1,17 +1,19 @@
 # Table of Contents
 
-1. [snpArcher QC dashboard](#QC-dashboard)<br><br>
-2. [Exploring other snpArcher output](#Exploring-other-snpArcher-output)<br>
-  2.1 [Breakdown of output](#Where-are=the-results?)<br>
-  2.2 [Genome masks and callable sites](#Callable-sites)<br>
-  2.3 [Other alignment metrics](#Alignment-summary-metrics)<br>
-  2.4 [SNP QC metrics](#SNP-QC-metrics)<br><br>
-3. [Using the VCF output](#Working-with-VCF-data)<br>
-  3.1 [Quick vcf stats](#Quick-stats)<br>
-  3.2 [More complex filtering](#Filtering)<br>
-  3.3 [Re-running PCA with subset of samples](#PCA-on-a-smaller-sample-set)<br>
-  3.4 [LD decay](#LD-decay)<br>
-  3.5 [Local PCA](#Local-pca-with-lostruct)
+1. [snpArcher QC dashboard](#qc-dashboard)
+2. [Exploring other `snpArcher` output](#exploring-other-snparcher-output)
+    1. [Breakdown of output](#where-are-the-results)
+    2. [Genome masks and callable sites](#callable-sites)
+        1. [Coverage](#coverage)
+        2. [Mappability](#genmap)
+    4. [Other alignment metrics](#alignment-summary-metrics)
+    5. [SNP QC metrics](#snp-qc-metrics)
+3. [Using the VCF output](#working-with-vcf-data)
+    1. [Quick VCF stats](#quick-stats)
+    2. [More complex filtering](#filtering)
+    3. [Re-running PCA with subset of samples](#pca-on-a-smaller-sample-set)
+    4. [LD decay](#ld-decay)
+    5. [Local PCA](#local-pca-with-lostruct)
 
 ---
 # QC dashboard
@@ -42,7 +44,7 @@ Now, we'll take a few moments to walk through this dashboard and discuss what ev
 
 ---
 
-# Exploring snpArcher output
+# Exploring other `snpArcher` output
 
 ## Where are the results?
 
@@ -266,7 +268,7 @@ ggplot(secondary) +
 If we're curious about what SNPs got filtered and what didn't, we can take advantage of the file `QC/cracherodi_snpqc.txt` which is already nicely formatted with some of the key metrics used for SNP filtering, at least by snpArcher. 
 
 > [!IMPORTANT]
-> This file doesn't represent all SNPs in the clean vcfs, but just the snps that are present in `QC/cracherodi.pruned.vcf.gz`. This "pruned" vcf is the one used for PCA and some of the other stats were you don't want SNPs linked by LD. Regardless, this file is still a good representation of variant characteristics in our data
+> This file doesn't represent all SNPs in the clean VCFs, but just the SNPs that are present in `QC/cracherodi.pruned.vcf.gz`. This "pruned" VCF is the one used for PCA and some of the other stats where you don't want SNPs linked by LD. Regardless, this file is still a good representation of variant characteristics in our data
 
 Let's take a look:
 
@@ -278,9 +280,9 @@ JAJLRC010000027.1	153	.	0.071	51.31	.	0	0.693	49.82	.
 JAJLRC010000027.1	168	.	0.094	72.08	-0.674	0	0.223	54	-0.674
 JAJLRC010000027.1	211	.	0.233	462.71	0.967	3.256	0.61	53.88	0
 ```
-By default, snpArcher removes SNPs with QUAL < 30, ReadPosRankSum < -8.0, FS > 60, SOR > 3, MQ < 40, and MQRankSum < -12.5. A couple of these rules change for indels.
+By default, snpArcher removes SNPs with `QUAL < 30`, `ReadPosRankSum < -8.0`, `FS > 60`, `SOR > 3`, `MQ < 40`, and `MQRankSum < -12.5`. A couple of these rules change for indels.
 
-It can be interesting to explore the distributions of some of these metrics, and get a sense of overall data quality. Let's load this in R and visualize:
+It can be interesting to explore the distributions of some of these metrics and get a sense of overall data quality. Let's load this in `R` and visualize:
 
 ```
 snpqc =
@@ -298,11 +300,13 @@ ggplot(snpqc) +
   geom_density(aes(x = value)) +
   facet_wrap(~name, scales = 'free')
 ```
+
+
 ![image](https://github.com/user-attachments/assets/ed08dfc6-3f8a-430c-a5bd-c84758090472)
+
 
 As you can see by these distributions, these represent the metrics of SNPs that were already filtered. If we want a report on the raw data, we'll have to do some extra work (see 'More complex filtering').
 
----
 
 # Working with VCF data
 
@@ -351,9 +355,11 @@ snpqc =
       facet_wrap(~name, scales = 'free')
 ```
 
+
 ![image](https://github.com/user-attachments/assets/7b1eda97-cea3-42f7-9a8d-9c0acb83de40)
 
-Based on these results, we can definitely see how some of the filters snpArcher implements, for excluding variants with MQ<40, will remove a small proportion of variants. While we haven't done any explicit calculations yet, this would suggest that overall we're not losing a bunch of data to filters. 
+
+Based on these results, we can see how some of the filters snpArcher implements for excluding variants with MQ<40 will remove a small proportion of variants. While we haven't done any explicit calculations yet, this would suggest that we're not losing data to filters. 
 
 You might imagine a scenario where, after seeing these, you want to:<br>
     **a)** Implement stricter filters (higher MQ?)<br>
@@ -362,6 +368,7 @@ You might imagine a scenario where, after seeing these, you want to:<br>
         - Implement a hardy-weinberg based filter. The small bump in allele frequency at 0.5 is likely an artifact due to mapping to homologs. If we were very concerned, we could try to reduce that by  removing variants violating some HWE threshold. However, you need to be careful with the nature of your dataset and the downstream analysis. Filtering based on HWE might not make sense if there is serious population structure, or you're doing a selection scan wwehre you want to identify such loci. 
 
 ## PCA on a smaller sample set
+
 Let's say we're really interested in relationships just within our northern samples, and we want a PCA of just them. We could filter samples in the `QC/cracherodi.eigenvec` file, but the more correct approach, especially if we want to report these data, would be to re-create a PCA with just the SNPs for those samples. There are many ways to do this, but the general approach I like is:
 
 1. Filter `VCF` files with `bcftools`
