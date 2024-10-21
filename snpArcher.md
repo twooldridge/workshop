@@ -68,7 +68,9 @@ There! Everything should be nice and organized now. 🎉
 
 # `snpArcher` config file:
 
+To actually run snpArcher, we not only need to setup the dependencies, but we need to download the snpArcher folder from github which contains all the scripts for running it. 
 ```
+git clone https://github.com/harvardinformatics/snpArcher.git
 cd snpArcher
 head config/config.yaml
 ```
@@ -132,7 +134,7 @@ cov_threshold_upper:
 ## To use this option, set the variables below to the desired X
 ## and make sure all other coverage variables are empty
 
-cov_threshold_stdev: 2.5
+cov_threshold_stdev: 2
 
 ## Finally, filtering can be done based on the absolute scaling of the mean, 
 ## where regions of the genome with mean coverage < (global mean coverge / X) or > (global mean coverge * X) are removed.
