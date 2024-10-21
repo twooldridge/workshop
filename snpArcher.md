@@ -191,7 +191,7 @@ Now, we're ready to run everything. The `snakemake` job that controls it all wil
 >cd snpArcher
 >conda activate snparcher
 >snakemake -d ./ --workflow-profile profiles/slurm  --cores 1 --use-conda   # --cores 1 because we only need 1 core for the head job
-```
+>```
 
 If you are running this on a local server, please run: 
 
