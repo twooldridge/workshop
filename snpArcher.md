@@ -56,7 +56,7 @@ rm -rf ncbi_dataset README.md md5sum.txt
 
 ## Now, the fastq data. We'll try something a bit fancier to organize the read files
 tar -xvf downloads/fastq.tar.gz
-ls downloads/fastq | xargs -I {} cp downloads/fastq/{} data/
+ls downloads/*fastq* | xargs -I {} cp downloads/fastq/{} data/
 
 ## Finally, the sample file:
 cp downloads/samples.csv pops/
