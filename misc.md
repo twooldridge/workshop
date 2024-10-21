@@ -7,7 +7,10 @@
     2. [Deleting lines](#deleting-lines)
     3. [Printing lines](#printing-lines)
     4. [Editing-in place](#editing-in-place)
-5. [Awk: a nice complement of sed](#awk-a-nice-complement-to-sed)
+4. [Awk: a nice complement of sed](#awk-a-nice-complement-to-sed)
+    1. [Awk structure](#awk-structure)
+    2. [How to run awk programs](#how-to-run-awk-programs)
+    3. [Awk extra features](#extra-features)
 
    
 
@@ -154,23 +157,47 @@ Looks like it worked! Ok, that's enough of a primer for now.
 
 # Awk: a nice complement to sed
 
+Awk is a program that you can use to select particular records in a file and perform operations upon them.
 
-How does *AWK* work? Well, it breaks each line of input passed to it into fields. By default, a field is a string of consecutive characters delimited by whitespace, though there are options for changing this. Awk parses and operates on each separate field. This makes it ideal for handling structured text files- especially tables- and organizing data into consistent chunks, such as rows and columns.
+How does *AWK* work? 
 
-Strong quoting and curly brackets enclose blocks of awk code within a shell script.
+1. Awk breaks each line of input passed to it into fields. By default, a field is a string of consecutive characters delimited by whitespace, but the delimiter can be modified.
+2. Awk parses and operates on each separate field.
 
-For example: 
+This is a deal for handling structured text files (especially tables) and organizing data into consistent chunks, such as rows and columns.
+
+## Awk structure 
+
+From [the GNU Awk User Guide](https://www.gnu.org/software/gawk/manual/gawk.html#Getting-Started):
+
+> When you run awk, you specify an awk program that tells awk what to do. The program consists of a series of rules. Each rule specifies one pattern to search for and one action to perform upon finding the pattern.
+> Syntactically, a rule consists of a pattern followed by an action. The action is enclosed in braces to separate it from the pattern. Newlines usually separate rules. Therefore, an awk program looks like this:
 
 ```
-# $1 is field #1, $2 is field #2, etc.
-echo one two | awk '{print $1}'
-# one
+pattern { action }
+pattern { action }
 ```
 
+The program is surrounded by single quotes (strong quoting), and curly brackets enclose the actions of awk code within a shell script.
 
-While each block in `curly brackets` will be executed every time a new line is read, we can execute commands right after `awk` processes the input and after it has processed all input with commands `BEGIN` and `END`. And, it also supports some pre-defined and automatic variables to help you write your programs. Among them, you will often encounter:
 
-- `NR`: The current input record number. Assuming we are delimiting our "records" withe newlines, this will match the line number being processed.
+## How to run awk programs?
+
+You would run:
+
+```
+awk 'program' input.file # When using a file
+
+or
+
+input stream | awk 'program'
+```
+
+## Extra features 
+
+While each block in `curly brackets` will be executed every time a new line is read, we can execute commands right after `awk` processes the input and after it has processed all input with commands `BEGIN` and `END`. It also supports some pre-defined and automatic variables to help you write your programs. Among them, you will often encounter:
+
+- `NR`: The current input record number. Assuming we are delimiting our "records" with newlines (`\n`), this will match the line number being processed.
 - `NF`: Number of fields of the line being processed.
 - `FS`/`OFS`: Input and output field separators.
 
@@ -180,7 +207,7 @@ awk 'BEGIN{FS=","; counter=0}NF==5{counter=counter+1}END{print "Number of record
 ```
 
 
-Now, let's try to do something more applicable to our data. We want to get information from the `samples.csv` file, as we did with `sed`. Imagine we want to know from the samples file how many are too far north (latitude > 37) and which is the farthest North.
+Let's try to do something more applicable to our data. We want to get information from the `samples.csv` file, as we did with `sed`. Imagine we want to know from the samples file how many are too far north (latitude > 37) and which is the farthest North.
 
 ```
  # Column 1 is BioSample
