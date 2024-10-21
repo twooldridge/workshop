@@ -103,18 +103,16 @@ For the **`might change`**, there are a few interesting parameters.
 
 Let's discuss the filtering options:
 
-```
-maf: 0 # SNPs with MAF below this value will be filtered from the final clean VCFs. Set to 0 to disable.
-scaffolds_to_exclude: "" #comma separated, no spaces list of scaffolds to exclude from final clean VCFs. Set to blank to disable.
-```
-
-- I like to set MAF to `0` and do all filtering downstream.
-- For example, in a selection scan, you might want to include even the lowest frequency
+- `maf: 0` -- SNPs with MAF below this value will be filtered from the final clean VCFs. Set to 0 to disable.
+  - I like to set MAF to `0` and do all filtering downstream.
+- `scaffolds_to_exclude: ""` -- comma separated, no spaces list of scaffolds to exclude from final clean VCFs. Set to blank to disable.
+  - For example, in a selection scan, you might want to include even the lowest frequency
 variants as long as they pass the other filtering criteria.
 This doesn't apply to our toy dataset, but for whole genome data, you might want to exclude
 the abalone mitogenome or perhaps other scaffolds with known problems.
 We'll just set this to `""`, indicating that everything should be included.
-- A key feature is filtering based on coverage. There are many ways to configure this, depending on your data type and how strict you
+
+- Filtering based on coverage: This can be considered a key feature of the pipeline. There are many ways to configure this, depending on your data type and how strict you
 would like to be. I like to set my criteria based on standard deviation:
 
 
