@@ -183,13 +183,27 @@ Below is a LONG list of configurable parameters for each pipeline step. We'll le
 
 Now, we're ready to run everything. The `snakemake` job that controls it all will run in a screen session you can check in on.
 
+> [!CAUTION]
+> The next command is for working with SLURM and we have access to `screen` or `tmux`. Please have a look below for CICESE workshop users. 
+>
+>```
+>screen -S varcal
+>cd snpArcher
+>conda activate snparcher
+>snakemake -d ./ --workflow-profile profiles/slurm  --cores 1 --use-conda   # --cores 1 because we only need 1 core for the head job
+```
+
+If you are running this on a local server, please run: 
 
 ```
-screen -S varcal
+# make sure you are accessing your interactive node (not using SLURM)
+bash ~/accesa-node
+conda activate /LUSTRE/bioinformatica_data/genomica_funcional/bin/snparcher-workshop
 cd snpArcher
-conda activate snparcher
-snakemake -d ./ --workflow-profile profiles/slurm  --cores 1 --use-conda   # --cores 1 because we only need 1 core for the head job
+snakemake -d ./ --workflow-profile profiles/default/ --cores 1 --use-conda -n
 ```
+
+This will do a "theoretical" run, meaning it will make sure the input files are where they should and the programs work well. 
 
 Once we've ensured everything is set up and running, we can use the remaining time for questions and call it a day. The results will be ready by tomorrow!
 
