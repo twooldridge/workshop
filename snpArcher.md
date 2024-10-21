@@ -60,7 +60,6 @@ ls downloads/*fastq* | xargs -I {} cp downloads/fastq/{} data/
 
 ## Finally, the sample file:
 cp downloads/samples.csv pops/
-cp downloads/samples.csv snpArcher/config/samples.csv
 ```
 
 There! Everything should be nice and organized now. 🎉
