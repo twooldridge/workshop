@@ -75,6 +75,8 @@ To kill the session, type `screen -X -S example kill`.
 
 Okay, that's pretty much all you need to know for now! You can see how having multiple screens can be helpful for running long tasks that aren't submitted to a cluster (for example, on your own computer). 
 
+> [!TIP]
+> There's also an alternative to `screen` called [`tmux`](https://github.com/tmux/tmux/wiki).
 
 # Sed: a brief primer
 
