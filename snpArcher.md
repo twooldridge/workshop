@@ -1,6 +1,6 @@
 # Configuring snpArcher
 
-Ok, the following assumes that you have already setup a snpArcher conda environment and have successfully executed the examlpe datasets (see [setup](https://github.com/twooldridge/workshop/blob/main/terminal.md)). Let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
+Ok, the following assumes that you have already set up a `snpArcher` Conda environment and have successfully executed the example datasets (see [setup](https://github.com/twooldridge/workshop/blob/main/terminal.md)). Let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
 
 ```
 mkdir -p data      # Where raw data goes
@@ -11,18 +11,23 @@ mkdir -p logs      # Where output files will go
 mkdir -p downloads # Self explanatory
 ```
 
-We'll add more folders as we proceed with analysis. Now let's talk about the toy data I've prepared so that we can run through analyses in real time. To do this, we're only including 20 individual black abalone of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000027.1`) to reduce file size and run time. 
+We'll add more folders as we proceed with the analysis. Now, let's talk about the toy data I've prepared so that we can run through analyses in real-time. To do this, we're only including 20 individual black abalones of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000027.1`) to reduce file size and run time. 
 
 > [!TIP]
-> In general, whenever you're testing something new, start small! I like to pick a favorite scaffold or region for a reference genome I work with before I do something on the whole genome. This will make it easier to troubleshoot and save you time before scaling up!
+> - Generally, when testing something new, **start small!**
+> - I like to pick a favorite scaffold or region for a reference genome I work with before I do something on the whole genome. This will make troubleshooting easier and save you time before scaling up!
+
+You should have already downloaded the `FASTQ` data we'll use. This isn't the 'rawest' data format, so the reads would be cleaner than expected. They are example reads I've subsampled from the data in the 2024 paper. Once you have them downloaded from google drive, move them to the `downloads` folder.
 
 ```
-## You should have already downloaded the fastq data we'll be using. This isn't the 'rawest' data format so the reads would be a little cleaner than expected, they are example reads I've subsampled from the data in the 2024 paper.
-## Once you have them downloaded from google drive, go ahead and move them to the `downloads` folder.
 ## Ex: 
 scp -r ~/Downloads/fastq.tar.gz ${USER}@${SERVER}:${WORKDIR}/downloads/
+```
 
-## Download black abalone reference genome straight from NCBI. This should complete in less than a minute
+
+Now, download the black abalone reference genome straight from NCBI. This should be completed in less than a minute.
+
+```
 datasets download genome accession GCA_022045235.1 --include genome --filename downloads/cracherodii.zip;unzip -o downloads/cracherodii.zip
 ```
 
@@ -35,7 +40,7 @@ cd refs
 cp ../ncbi_dataset/data/GCA_022045235.1/GCA_022045235.1_xgHalCrac1.p_genomic.fna cracherodii.fa
 samtools faidx cracherodii.fa
 
-## Now create a reference genome consisting of just the scaffold we'll be working with for this workshop.
+## Now create a reference genome of just the scaffold we'll work with for this workshop.
 
 samtools faidx cracherodii.fa JAJLRC010000027.1 > JAJLRC010000027.1.fa
 samtools faidx JAJLRC010000027.1.fa
