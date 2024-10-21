@@ -1,6 +1,6 @@
-# Configuring snpArcher
+# Setting up a `snpArcher` run
 
-Ok, the following assumes that you have already set up a `snpArcher` Conda environment and have successfully executed the example datasets (see [setup](https://github.com/twooldridge/workshop/blob/main/terminal.md)). Let's do some other organizational things in the project folder before we start. Your philosophy on organization may differ, but here's what I do:
+Ok, the following assumes that you have already set up a `snpArcher` Conda environment and have successfully executed the example datasets (see [setup](https://github.com/twooldridge/workshop/blob/main/terminal.md)). Let's do some other organizational things in the project folder before we start. Your philosophy on the organization of your working directories may differ, but there has to be one. The idea is that you can understand and localize your analyses easily. Here's an example of the way we will be organizing the data for the workshop:
 
 ```
 mkdir -p data      # Where raw data goes
@@ -8,10 +8,10 @@ mkdir -p refs      # For reference assembly and associated files (e.g. blast dat
 mkdir -p pops      # Metadata for samples and sequencing, mainly in the form of plain .txt files
 mkdir -p cmds      # Where scripts will go
 mkdir -p logs      # Where output files will go
-mkdir -p downloads # Self explanatory
+mkdir -p downloads # Self-explanatory
 ```
 
-We'll add more folders as we proceed with the analysis. Now, let's talk about the toy data I've prepared so that we can run through analyses in real-time. To do this, we're only including 20 individual black abalones of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000027.1`) to reduce file size and run time. 
+We'll add more folders as we proceed with the analysis. Now, let's talk about the toy data I've prepared so we can run through analyses in real time. To do this, we're only including 20 individual black abalones of low-moderate coverage, and I've extracted the reads that map to one of the smaller scaffolds (`JAJLRC010000027.1`) to reduce file size and run time. 
 
 > [!TIP]
 > - Generally, when testing something new, **start small!**
@@ -24,86 +24,93 @@ You should have already downloaded the `FASTQ` data we'll use. This isn't the 'r
 scp -r ~/Downloads/fastq.tar.gz ${USER}@${SERVER}:${WORKDIR}/downloads/
 ```
 
-
-Now, download the black abalone reference genome straight from NCBI. This should be completed in less than a minute.
+Download the black abalone reference genome directly from NCBI. This should take less than a minute.
 
 ```
-datasets download genome accession GCA_022045235.1 --include genome --filename downloads/cracherodii.zip;unzip -o downloads/cracherodii.zip
+datasets download genome accession GCA_022045235.1 \
+  --include genome --filename downloads/cracherodii.zip
+unzip -o downloads/cracherodii.zip
 ```
 
-Some organization:
+
+some data organization: 
+
 
 ```
 ## First, the reference assembly
-
 cd refs
 cp ../ncbi_dataset/data/GCA_022045235.1/GCA_022045235.1_xgHalCrac1.p_genomic.fna cracherodii.fa
 samtools faidx cracherodii.fa
 
-## Now create a reference genome of just the scaffold we'll work with for this workshop.
-
+## Now create a reference genome consisting of just the scaffold we'll be working with for this workshop.
 samtools faidx cracherodii.fa JAJLRC010000027.1 > JAJLRC010000027.1.fa
 samtools faidx JAJLRC010000027.1.fa
 cd -
 rm -rf ncbi_dataset README.md md5sum.txt
 
-
-
-
 ## Now, the fastq data. We'll try something a bit fancier to organize the read files
-
 tar -xvf downloads/fastq.tar.gz
 ls downloads/fastq | xargs -I {} cp downloads/fastq/{} data/
-
-
-
 
 ## Finally, the sample file:
 cp downloads/samples.csv pops/
 cp downloads/samples.csv snpArcher/config/samples.csv
 ```
 
-There! Everything should be nice and organized now. Let's take a look at the snpArcher configuration:
+There! Everything should be nice and organized now. 🎉
+
+
+## `snpArcher` config file:
 
 ```
 cd snpArcher
 head config/config.yaml
 ```
 
-We see that snpArcher needs a `samples.csv` file with all the relevant data (below). We can create this in excel and export it, or use the one I made for this class which we just placed in `snpArcher/config`:
+`snpArcher` needs a `samples.csv` file with all the relevant data (see below). We can create this in Excel and export it, or use the one I made for this class, which we just placed in `snpArcher/config`:
+
 
 <img width="725" alt="image" src="https://github.com/user-attachments/assets/4f8faecb-269b-451f-91ca-498764683849">
 
+
 Now, let's look more deeply at the parameters in the config file. You can quickly view the file first:
+
 
 ```
 less -S config/config.yaml
 ```
 
+
 <img width="1049" alt="image" src="https://github.com/user-attachments/assets/6b58680a-652b-48a6-9389-732f27ab46f2">
 
-Let's walk through what we need to change in the config file. Under 'must change'. we only need to modify:
+
+Let's walk through what we need to change in the config file. Under **`must change`**. We only need to modify:
+
 
 ```
 final_prefix: "cracherodii"
 generate_trackhub: False
 ```
 
-For the 'might change', there are a few interesting parameters. Let's discuss:
-```
-## I personally like to set MAF to '0' and do all filtering downtream, the analysis.
-## For example, in a selection scan, you might want to include even the lowest frequency
-## variants as long as they pass the other filtering criteria.
-maf: 0
 
-## This doesn't apply to our toy dataset, but for whole genome data you might want to exclude
-## the abalone mitogenome, or perhaps other scaffolds with known problems.
-## Here, we'll just set this to "", indicating that everything should be included.
-scaffolds_to_exclude: ""
+For the **`might change`**, there are a few interesting parameters.
+
+Let's discuss the filtering options:
+
+```
+maf: 0 # SNPs with MAF below this value will be filtered from the final clean VCFs. Set to 0 to disable.
+scaffolds_to_exclude: "" #comma separated, no spaces list of scaffolds to exclude from final clean VCFs. Set to blank to disable.
 ```
 
-A key feature is filtering based on coverage. There are many ways to configure this, and it depends on the type of data you have and how strict you
+- I like to set MAF to `0` and do all filtering downstream.
+- For example, in a selection scan, you might want to include even the lowest frequency
+variants as long as they pass the other filtering criteria.
+This doesn't apply to our toy dataset, but for whole genome data, you might want to exclude
+the abalone mitogenome or perhaps other scaffolds with known problems.
+We'll just set this to `""`, indicating that everything should be included.
+- A key feature is filtering based on coverage. There are many ways to configure this, depending on your data type and how strict you
 would like to be. I like to set my criteria based on standard deviation:
+
 
 ```
 ## If cov_filter is True, use these parameters to control how coverage filtering is done
@@ -123,7 +130,7 @@ cov_threshold_upper:
 
 cov_threshold_stdev: 2.5
 
-## Finally, filtering can be done based on absolute scaling of the mean, 
+## Finally, filtering can be done based on the absolute scaling of the mean, 
 ## where regions of the genome with mean coverage < (global mean coverge / X) or > (global mean coverge * X) are removed.
 ## To use this option, set the variable below to the desired X
 ## and make sure all other coverage variables are empty
@@ -131,20 +138,27 @@ cov_threshold_stdev: 2.5
 cov_threshold_rel:
 ```
 
-# Running snpArcher
 
-To execute on slurm, we'll need to also make some changes in the slurm config file in `profiles/slurm/config.yaml`. 
+# Running `snpArcher`
+
+
+To execute on SLURM, we'll need to also make some changes in the SLURM config file in `profiles/slurm/config.yaml`. 
+
 
 > [!CAUTION]
-> Please consult with your cluster admin if you have questions about tweaking these things. You will want to scale with consideration for other users and the size of the dataset.
+> Please consult your cluster admin if you have questions about tweaking these things. You will want to scale with consideration for other users and the size of the dataset.
 
 ![image](https://github.com/user-attachments/assets/5d4bd11d-6c9f-4e2f-87e1-7b1b1cdd3083)
 
-First, we'll keep `jobs` at 100, since we only have 20 samples and one scaffold, there aren't any instances where it will be useful to have more than 20 jobs running at the same time. When you start to deal with more samples and whole genome data you can increase this parameter, but *please* keep in mind how many resources you're asking of the servers and what other people need to do.
+
+First, we'll keep `jobs` at 100; since we only have 20 samples and one scaffold, there aren't any instances where having more than 20 jobs running in parallel will be helpful. When you start dealing with more samples and whole genome data, you can increase this parameter, but please keep in mind how many resources you're asking of the servers and what other people need to do.
+
 
 We'll change `retries` to 1, `slurm_partition` to what your cluster admin would recommend, and let's just set a default `runtime` of 360 minutes (6 hours) for this test dataset. 
 
-Now, let's go through all the options for the number of threads (CPUs) a process might use. I'll highlight the optiuons where increasing the number of threads might actually make a difference in runtime
+
+Now, let's go through all the options for the number of threads (CPUs) a process might use. I'll highlight the options where increasing the number of threads might make a difference in runtime:
+
 
 ```
 genmap: 8
@@ -152,13 +166,18 @@ bwa_map: 8
 dedup: 8
 ```
 
-While some of the options could be increased from 1 to 2, for the vast majority of these you won't really see a big increase in performance. Therefore, I set these at 1, so that the slurm job requests fewer resources of the cluster and is less likely to stay `PENDING` for very long.
 
-Now, below this is a LONG list of configurable parameters for each step of the pipeline. We'll leave these unmodified for now, but this will be good to revisit if you're seeing that some jobs need more slurm resources. Anything specified here overrides the previous parameters at the top of the config file. For example, if `bam2gvcf` keeps timing out and needs more runtime to finish, go and uncomment that section and specify a new runtime variable:
+While some of the options could be increased from 1 to 2, for the vast majority of these, you won't see a significant increase in performance. Therefore, I set these at 1 so that the SLURM job requests fewer resources of the cluster and is less likely to stay `PENDING` for very long.
+
+
+Below is a LONG list of configurable parameters for each pipeline step. We'll leave these unmodified for now, but this will be good to revisit if you see that some jobs need more resources. Anything specified here overrides the previous parameters at the top of the config file. For example, if `bam2gvcf` keeps timing out and needs more runtime to finish, go and uncomment that section and specify a new runtime variable:
+
 
 <img width="747" alt="image" src="https://github.com/user-attachments/assets/e7b8ce93-29f9-4fa5-8e7b-6c70b2884ade">
 
-Now, we're ready to run everything. The `snakemake` job that controls it all will be run in a screen session that you can check in on.
+
+Now, we're ready to run everything. The `snakemake` job that controls it all will run in a screen session you can check in on.
+
 
 ```
 screen -S varcal
@@ -167,16 +186,17 @@ conda activate snparcher
 snakemake -d ./ --workflow-profile profiles/slurm  --cores 1 --use-conda   # --cores 1 because we only need 1 core for the head job
 ```
 
-Once we've ensured that everything is up and running, we can use the remaining time for any questions and then call it a day. The results will be ready by tomorrow!
+Once we've ensured everything is set up and running, we can use the remaining time for questions and call it a day. The results will be ready by tomorrow!
+
 
 # Discussion
 
-Let's talk about the new abalone data that you all will be analyzing soon, and think if there are snpArcher parameters we need to adjust for.
+Let's discuss the new abalone data you will analyze soon and consider whether there are `snpArcher` parameters we need to adjust for.
 
 1) How many samples?
 2) Breadth of coverage?
 3) Size of reference genome? Scaffolds in reference genome? Quality?
-4) Will we be combining these data with another dataset (older, other population, etc.) at some point in time? 
+4) Will we combine these data with another dataset (older, other population, etc.)? 
 
 
 
