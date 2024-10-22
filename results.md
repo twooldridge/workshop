@@ -36,9 +36,9 @@ Where you replace all those variables with your server-specific setup.
 
 Now, the results!
 
-![image](https://github.com/user-attachments/assets/dd8f9fd5-e8b1-4384-a6ca-c4a7523b9483)
+<img width="1137" alt="image" src="https://github.com/user-attachments/assets/0587757c-347b-4b3a-b775-8008b3943622">
 
-Okay, this dashboard is **extremely** useful for initial exploration of the data and making sure everything looks ok. For example, no weird outliers on the PCA. The reality is that you will likely end up re-running many of these analyses yourself as you continue to explore your data and remove individuals, variants, etc. So think of this as what the name implies: a QC tool. All the data that goes into the QC dashboard can also be found in the `QC` folder. For example, if you want a simple `.txt` file of sample depth, go to `QC/cracherodi.idepth`
+Okay, this dashboard is **extremely** useful for initial exploration of the data and making sure everything looks ok. For example, there might be one strange sample on the PCA. This would be a good reason to dig deeper at the quality of the sample and think if there is any non-biological reason for this. The reality is that you will likely end up re-running many of these analyses yourself as you continue to explore your data and remove individuals, variants, etc. So think of this as what the name implies: a QC tool. All the data that goes into the QC dashboard can also be found in the `QC` folder. For example, if you want a simple `.txt` file of sample depth, go to `QC/cracherodi.idepth`
 
 Now, we'll take a few moments to walk through this dashboard and discuss what everything means.
 
